@@ -1,0 +1,49 @@
+{
+    "author": "Colder <cncolder@gmail.com> (http://blog.vitarn.com)",
+    "bundleDependencies": [],
+    "dependencies": {
+        "bluebird": "^2.3.2",
+        "debug": "^1.0.4",
+        "moment": "^2.8.3",
+        "request": "^2.42.0"
+    },
+    "description": "Wish.com api",
+    "devDependencies": {
+        "chai-as-promised": "^4.1.1",
+        "del": "^0.1.2",
+        "gulp": "^3.8.7",
+        "gulp-cached": "^1.0.1",
+        "gulp-mocha": "^1.0.0",
+        "gulp-util": "^3.0.1",
+        "mocha": "^1.21.4",
+        "traceur": "^0.0.60",
+        "traceurepl": "^0.2.0",
+        "vinyl-source-stream": "^0.1.1"
+    },
+    "engines": {
+        "node": "0.10.x",
+        "npm": "1.x"
+    },
+    "files": [
+        "index.js",
+        "lib"
+    ],
+    "homepage": "https://github.com/cncolder/wishapi",
+    "licenses": "MIT",
+    "main": "index.js",
+    "name": "wishapi",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/cncolder/wishapi.git"
+    },
+    "scripts": {
+        "prepublish": "gulp build",
+        "test": "mocha"
+    },
+    "tags": [
+        "wish",
+        "merchant",
+        "api"
+    ],
+    "version": "0.1.0"
+}

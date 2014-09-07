@@ -1,0 +1,3 @@
+--compilers js:./dev/traceur
+--timeout 10s
+--check-leaks
