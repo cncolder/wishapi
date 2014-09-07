@@ -1,2 +1,2 @@
-require('./dev/traceur');
-require('./dev/gulpfile');
+require('coffee-script/register');
+require('./gulpfile.coffee');
