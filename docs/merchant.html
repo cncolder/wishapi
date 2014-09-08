@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>merchant.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="debug.html">
+                debug.coffee
+              </a>
+            
+              
+              <a class="source" href="errors.html">
+                errors.coffee
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.coffee
+              </a>
+            
+              
+              <a class="source" href="merchant.html">
+                merchant.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>merchant.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>util = <span class="hljs-built_in">require</span> <span class="hljs-string">'util'</span>
+url = <span class="hljs-built_in">require</span> <span class="hljs-string">'url'</span>
+Promise = <span class="hljs-built_in">require</span> <span class="hljs-string">'bluebird'</span>
+request = Promise.promisifyAll <span class="hljs-built_in">require</span> <span class="hljs-string">'request'</span>
+errors = <span class="hljs-built_in">require</span> <span class="hljs-string">'./errors'</span>
+debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'./debug'</span>) <span class="hljs-string">'merchant'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Merchant
+========
+
+**Merchant** use <span class="hljs-keyword">for</span> invoke [Wish Merchant API](<span class="hljs-attribute">https</span>:<span class="hljs-regexp">//m</span>erchant.wish.com<span class="hljs-regexp">/documentation/api). For more infomation please visit [The Wish merchant platform](https:/</span>/merchant.wish.com).</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Merchant</span></span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">new</span> Merchant
+  ------------
+  
+  create a <span class="hljs-keyword">new</span> instance.
+  
+  * <span class="hljs-attribute">key</span>: Api key <span class="hljs-keyword">of</span> wish. Read [official <span class="hljs-built_in">document</span>](<span class="hljs-attribute">https</span>:<span class="hljs-regexp">//m</span>erchant.wish.com/documentation/api<span class="hljs-comment">#get-api-key) for more info.</span>
+  * <span class="hljs-attribute">sandbox</span>: If `<span class="javascript"><span class="hljs-literal">true</span></span>` will invoke sandbox api <span class="hljs-keyword">for</span> test. Default `<span class="javascript"><span class="hljs-literal">false</span></span>`.
+  * <span class="hljs-attribute">timeout</span>: Milliseconds wait the respond <span class="hljs-keyword">of</span> api. Default <span class="hljs-number">20</span>s (<span class="hljs-number">20</span> * <span class="hljs-number">1000</span>).
+  
+  <span class="hljs-keyword">return</span> a <span class="hljs-keyword">new</span> instance.
+  
+  `<span class="javascript"></span>``<span class="javascript">coffee
+  merchant = <span class="hljs-keyword">new</span> Merchant key: <span class="hljs-string">'your api key here'</span>
+  </span>``<span class="javascript"></span>`</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">({ <span class="hljs-property">@key</span>, <span class="hljs-property">@sandbox</span>, <span class="hljs-property">@timeout</span> })</span> -&gt;</span>
+    <span class="hljs-property">@sandbox</span> ?= <span class="hljs-literal">false</span>
+    <span class="hljs-property">@timeout</span> ?= <span class="hljs-number">20</span> * <span class="hljs-number">1000</span>
+
+    <span class="hljs-property">@baseUrl</span> = <span class="hljs-keyword">if</span> <span class="hljs-property">@sandbox</span>
+      <span class="hljs-string">'https://sandbox.merchant.wish.com/api/v1'</span>
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-string">'https://merchant.wish.com/api/v1'</span>
+  
+  <span class="hljs-attribute">format</span>: <span class="hljs-function"><span class="hljs-params">(json)</span> -&gt;</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> json.success <span class="hljs-keyword">is</span> <span class="hljs-string">'string'</span>
+      json.success = json.success <span class="hljs-keyword">is</span> <span class="hljs-string">'True'</span>
+      <span class="hljs-keyword">return</span> json
+      
+    <span class="hljs-keyword">if</span> util.isArray json
+      <span class="hljs-keyword">return</span> json.map <span class="hljs-function"><span class="hljs-params">(item)</span> =&gt;</span> <span class="hljs-property">@format</span> item
+    
+    <span class="hljs-keyword">if</span> json.Product
+      json = json.Product
+      json.is_promoted = json.is_promoted <span class="hljs-keyword">is</span> <span class="hljs-string">'True'</span> <span class="hljs-keyword">if</span> json.is_promoted
+      [ <span class="hljs-string">'number_saves'</span>, <span class="hljs-string">'number_sold'</span> ].map <span class="hljs-function"><span class="hljs-params">(key)</span> -&gt;</span>
+        json[key] = Number json[key] <span class="hljs-keyword">if</span> json[key]
+    
+    <span class="hljs-keyword">if</span> json.Variant
+      json = json.Variant
+      json.enabled = json.enabled <span class="hljs-keyword">is</span> <span class="hljs-string">'True'</span> <span class="hljs-keyword">if</span> json.enabled
+      [ <span class="hljs-string">'msrp'</span>, <span class="hljs-string">'inventory'</span>, <span class="hljs-string">'price'</span>, <span class="hljs-string">'shipping'</span> ].map <span class="hljs-function"><span class="hljs-params">(key)</span> -&gt;</span>
+        json[key] = Number json[key] <span class="hljs-keyword">if</span> json[key]
+    
+    <span class="hljs-keyword">if</span> json.Order
+      json = json.Order
+      <span class="hljs-keyword">if</span> json.ShippingDetail
+        json[key] = value <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">of</span> json.ShippingDetail
+        <span class="hljs-keyword">delete</span> json.ShippingDetail
+      [ <span class="hljs-string">'order_total'</span>, <span class="hljs-string">'quantity'</span>, <span class="hljs-string">'price'</span>, <span class="hljs-string">'cost'</span>,
+        <span class="hljs-string">'shipping'</span>, <span class="hljs-string">'shipping_cost'</span>, <span class="hljs-string">'days_to_fulfill'</span> ].map <span class="hljs-function"><span class="hljs-params">(key)</span> -&gt;</span>
+        json[key] = Number json[key] <span class="hljs-keyword">if</span> json[key]
+      [ <span class="hljs-string">'last_updated'</span>, <span class="hljs-string">'order_time'</span> ].map <span class="hljs-function"><span class="hljs-params">(key)</span> -&gt;</span>
+        json[key] = <span class="hljs-keyword">new</span> Date json[key] <span class="hljs-keyword">if</span> json[key]
+    
+    json = json.Tag <span class="hljs-keyword">or</span> json
+    
+    <span class="hljs-keyword">if</span> json.tags
+      json.tags = <span class="hljs-property">@format</span> json.tags
+    
+    <span class="hljs-keyword">if</span> json.auto_tags
+      json.auto_tags = <span class="hljs-property">@format</span> json.auto_tags
+      
+    <span class="hljs-keyword">if</span> json.variants
+      json.variants = <span class="hljs-property">@format</span> json.variants
+    
+    json
+  
+  <span class="hljs-attribute">url</span>: <span class="hljs-function"><span class="hljs-params">(path, query)</span> -&gt;</span>
+    uri = url.parse <span class="hljs-property">@baseUrl</span>
+    uri.pathname += path
+    uri.path = <span class="hljs-string">''</span>
+    uri.query ?= {}
+    uri.query[key] = value <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">of</span> query</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>uri.query.key = @key</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    url.format uri
+  
+  <span class="hljs-attribute">handle</span>: <span class="hljs-function"><span class="hljs-params">(promise)</span> -&gt;</span>
+    promise
+      .<span class="hljs-keyword">catch</span> <span class="hljs-function"><span class="hljs-params">([ res, body ])</span> -&gt;</span>
+        debug <span class="hljs-string">'HTTP Status'</span>, res.statusCode
+      
+        <span class="hljs-keyword">throw</span> errors.http res.statusCode
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">([ res, body ])</span> -&gt;</span>
+        debug body.code, body.message
+      
+        { code } = body
+      
+        <span class="hljs-keyword">if</span> code <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
+          body
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> code
+          <span class="hljs-keyword">throw</span> errors.wish body
+        <span class="hljs-keyword">else</span>
+          <span class="hljs-keyword">throw</span> errors.ServerError <span class="hljs-attribute">response</span>: body
+  
+  <span class="hljs-attribute">get</span>: <span class="hljs-function"><span class="hljs-params">(path, query = {})</span> -&gt;</span>
+    <span class="hljs-keyword">return</span> Promise.reject <span class="hljs-keyword">new</span> errors.ParamMissingError <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-property">@key</span>
+    
+    query.key = <span class="hljs-property">@key</span>
+    uri = <span class="hljs-property">@url</span> path, query
+    
+    debug <span class="hljs-string">'GET'</span>, uri
+    
+    <span class="hljs-property">@handle</span> request.getAsync uri,
+      <span class="hljs-attribute">json</span>:    <span class="hljs-literal">true</span>
+      <span class="hljs-attribute">timeout</span>: <span class="hljs-property">@timeout</span>
+    
+  <span class="hljs-attribute">post</span>: <span class="hljs-function"><span class="hljs-params">(path, form = {})</span> -&gt;</span>
+    <span class="hljs-keyword">return</span> Promise.reject <span class="hljs-keyword">new</span> errors.ParamMissingError <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-property">@key</span>
+    
+    uri = <span class="hljs-property">@url</span> path
+    form.key = <span class="hljs-property">@key</span>
+    
+    debug <span class="hljs-string">'POST'</span>, uri, form
+    
+    <span class="hljs-property">@handle</span> request.postAsync uri,
+      <span class="hljs-attribute">json</span>:    <span class="hljs-literal">true</span>
+      <span class="hljs-attribute">timeout</span>: <span class="hljs-property">@timeout</span>
+      <span class="hljs-attribute">form</span>:    form</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Authentication
+  --------------
+  
+  Test <span class="hljs-keyword">if</span> api key <span class="hljs-keyword">is</span> valid.
+  
+  <span class="hljs-keyword">return</span> `<span class="javascript">{success: <span class="hljs-literal">true</span>}</span>` <span class="hljs-keyword">if</span> success. otherwise error.</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">authTest</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
+    <span class="hljs-property">@authTestJSON</span>()
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">authTestJSON</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
+    <span class="hljs-property">@get</span> <span class="hljs-string">'/auth_test'</span>
+      .nodeify callback</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Product
+  -------
+  
+  Retrieve the details about a product which exists <span class="hljs-literal">on</span> the Wish platform.
+
+  * <span class="hljs-attribute">id</span>: The unique wish identifier <span class="hljs-keyword">for</span> <span class="hljs-keyword">this</span> product
+  
+  <span class="hljs-keyword">return</span> a product data.</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">product</span>: <span class="hljs-function"><span class="hljs-params">(id, callback)</span> -&gt;</span>
+    <span class="hljs-property">@productJSON</span> id
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">productJSON</span>: <span class="hljs-function"><span class="hljs-params">(id, callback)</span> -&gt;</span>
+    <span class="hljs-property">@get</span> <span class="hljs-string">'/product'</span>, <span class="hljs-attribute">id</span>: id
+      .nodeify callback</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  List all Products
+
+  * <span class="hljs-attribute">start</span>: **optional** An offset into the list <span class="hljs-keyword">of</span> returned items. Use <span class="hljs-number">0</span> to start at the beginning. The API will <span class="hljs-keyword">return</span> the requested number <span class="hljs-keyword">of</span> items starting at <span class="hljs-keyword">this</span> offset. Default to <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> supplied.
+  * <span class="hljs-attribute">limit</span>: **optional** A limit <span class="hljs-literal">on</span> the number <span class="hljs-keyword">of</span> products that can be returned. Limit can range from <span class="hljs-number">1</span> to <span class="hljs-number">500</span> items <span class="hljs-keyword">and</span> the <span class="hljs-reserved">default</span> <span class="hljs-keyword">is</span> <span class="hljs-number">50</span>
+  
+  <span class="hljs-keyword">return</span> an product array.</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">products</span>: <span class="hljs-function"><span class="hljs-params">(start, limit, callback)</span> -&gt;</span>
+    <span class="hljs-property">@productsJSON</span> start, limit
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">productsJSON</span>: <span class="hljs-function"><span class="hljs-params">(start = <span class="hljs-number">0</span>, limit = <span class="hljs-number">50</span>, callback)</span> -&gt;</span>
+    <span class="hljs-property">@get</span> <span class="hljs-string">'/product/multi-get'</span>,
+      <span class="hljs-attribute">start</span>: start
+      <span class="hljs-attribute">limit</span>: limit
+    .nodeify callback</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Create a Product
+  
+  * <span class="hljs-attribute">name</span>: Name <span class="hljs-keyword">of</span> the product as shown to users <span class="hljs-literal">on</span> Wish
+  * <span class="hljs-attribute">description</span>: Description <span class="hljs-keyword">of</span> the product. Should <span class="hljs-keyword">not</span> contain HTML. If you want a <span class="hljs-keyword">new</span> line use <span class="hljs-string">"\n"</span>.
+  * <span class="hljs-attribute">tags</span>: Comma separated list <span class="hljs-keyword">of</span> strings that describe the product. Only <span class="hljs-number">10</span> are allowed. Any tags past <span class="hljs-number">10</span> will be ignored.
+  * <span class="hljs-attribute">sku</span>: The unique identifier that your system uses to recognize <span class="hljs-keyword">this</span> product
+  * <span class="hljs-attribute">color</span>: optional The color <span class="hljs-keyword">of</span> the product. <span class="hljs-attribute">Example</span>: red, blue, green
+  * <span class="hljs-attribute">size</span>: optional The size <span class="hljs-keyword">of</span> the product. <span class="hljs-attribute">Example</span>: Large, Medium, Small, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7.5</span>
+  * <span class="hljs-attribute">inventory</span>: The physical quantities you have <span class="hljs-keyword">for</span> <span class="hljs-keyword">this</span> product
+  * <span class="hljs-attribute">price</span>: The price <span class="hljs-keyword">of</span> the product <span class="hljs-keyword">when</span> the user purchases one
+  * <span class="hljs-attribute">shipping</span>: The shipping <span class="hljs-keyword">of</span> the product <span class="hljs-keyword">when</span> the user purchases one
+  * <span class="hljs-attribute">msrp</span>: optional Manufacturer<span class="hljs-string">'s Suggested Retail Price. This field is recommended as it will show as a strikethrough price on Wish and appears above the selling price for the product.
+  * shipping_time: optional The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 15-20
+  * main_image: URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.
+  * parent_sku: **optional** When defining a variant of a product we must know which product to attach the variation to. parent_sku is the unique id of the product that you can use later when using the add product variation API.
+  * brand: optional Brand or manufacturer of your product
+  * landing_page_url: optional URL on your website containing the product details
+  * upc: optional 12-digit Universal Product Codes (UPC)-contains no letters or other characters
+  * extra_images: optional URL of extra photos of your product. Link directly to the image, not the page where it is located. Same rules apply as main_image. You can specify one or more additional images separated by the character '</span>|<span class="hljs-string">'
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">createProduct</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@createProductJSON</span> args
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">createProductJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/product/add'</span>, args
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Update a Product
+  
+  * <span class="hljs-attribute">id</span>: Must provide either id <span class="hljs-keyword">or</span> parent_sku Wish<span class="hljs-string">'s unique identifier for the product you would like to update
+  * parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update
+  * name: optional Name of the product as shown to users
+  * description: optional Description of the product. If you want a new line use "\n".
+  * tags: optional Comma separated list of strings. The tags passed into this parameter will completely replace the tags that are currently on the product
+  * brand: optional Brand or manufacturer of your product
+  * landing_page_url: optional URL on your website containing the product detail and buy button for the applicable product.
+  * upc: optional 12-digit Universal Product Codes (UPC)-contains no letters or other characters
+  * main_image: optional URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.
+  * extra_images: optional URL of a photo of your product. Link directly to the image, not the page where it is located. Same rules apply as main_image. You can specify one or more additional images separated by the character '</span>|<span class="hljs-string">'
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateProduct</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@updateProductJSON</span> args
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">updateProductJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/product/update'</span>, args
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Enable a Product
+  
+  * <span class="hljs-attribute">id</span>: Must provide either id <span class="hljs-keyword">or</span> parent_sku Wish<span class="hljs-string">'s unique identifier for the product you would like to update
+  * parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">enableProduct</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@enableProductJSON</span> args
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">enableProductJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/product/enable'</span>, args
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Disable a Product
+  
+  * <span class="hljs-attribute">id</span>: Must provide either id <span class="hljs-keyword">or</span> parent_sku Wish<span class="hljs-string">'s unique identifier for the product you would like to update
+  * parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">disableProduct</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@disableProductJSON</span> args
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">disableProductJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/product/disable'</span>, args
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Variation
+  ---------
+  
+  Retrieves the details <span class="hljs-keyword">of</span> an existing product variation.
+  
+  Be <span class="hljs-attribute">careful</span>: SKU <span class="hljs-keyword">is</span> <span class="hljs-reserved">case</span> sensitive.</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">variant</span>: <span class="hljs-function"><span class="hljs-params">(sku, callback)</span> -&gt;</span>
+    <span class="hljs-property">@variantJSON</span> sku
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">variantJSON</span>: <span class="hljs-function"><span class="hljs-params">(sku, callback)</span> -&gt;</span>
+    <span class="hljs-property">@get</span> <span class="hljs-string">'/variant'</span>, <span class="hljs-attribute">sku</span>: sku
+      .nodeify callback</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  List all Product Variations</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">variants</span>: <span class="hljs-function"><span class="hljs-params">(start, limit, callback)</span> -&gt;</span>
+    <span class="hljs-property">@variantsJSON</span> start, limit
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">variantsJSON</span>: <span class="hljs-function"><span class="hljs-params">(start = <span class="hljs-number">0</span>, limit = <span class="hljs-number">50</span>, callback)</span> -&gt;</span>
+    <span class="hljs-property">@get</span> <span class="hljs-string">'/variant/multi-get'</span>,
+      <span class="hljs-attribute">start</span>: start
+      <span class="hljs-attribute">limit</span>: limit
+    .nodeify callback</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Create a Product Variation
+  
+  * <span class="hljs-attribute">parent_sku</span>: The parent_sku <span class="hljs-keyword">of</span> the product <span class="hljs-keyword">this</span> <span class="hljs-keyword">new</span> product variation should be added to. If the product <span class="hljs-keyword">is</span> missing a parent_sku, <span class="hljs-keyword">then</span> <span class="hljs-keyword">this</span> should be the SKU <span class="hljs-keyword">of</span> a product variation <span class="hljs-keyword">of</span> the product
+  * <span class="hljs-attribute">sku</span>: The unique identifier that your system uses to recognize <span class="hljs-keyword">this</span> variation
+  * <span class="hljs-attribute">color</span>: optional The color <span class="hljs-keyword">of</span> the variation. <span class="hljs-attribute">Example</span>: red, blue, green
+  * <span class="hljs-attribute">size</span>: optional The size <span class="hljs-keyword">of</span> the variation. <span class="hljs-attribute">Example</span>: Large, Medium, Small, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7.5</span>
+  * <span class="hljs-attribute">inventory</span>: The physical quantities you have <span class="hljs-keyword">for</span> <span class="hljs-keyword">this</span> variation
+  * <span class="hljs-attribute">price</span>: The price <span class="hljs-keyword">of</span> the variation <span class="hljs-keyword">when</span> the user purchases one
+  * <span class="hljs-attribute">shipping</span>: The shipping <span class="hljs-keyword">of</span> the variation <span class="hljs-keyword">when</span> the user purchases one
+  * <span class="hljs-attribute">msrp</span>: optional Manufacturer<span class="hljs-string">'s Suggested Retail Price. This field is recommended as it will show as a strikethrough price on Wish and appears above the selling price for the variation.
+  * shipping_time: optional The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 15-20
+  * main_image: URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">createVariant</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@createVariantJSON</span> args
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">createVariantJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/variant/add'</span>, args
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Update a Product Variation
+  
+  * <span class="hljs-attribute">sku</span>: The unique identifier <span class="hljs-keyword">for</span> the variation you would like to update
+  * <span class="hljs-attribute">inventory</span>: optional The physical quantities you have <span class="hljs-keyword">for</span> <span class="hljs-keyword">this</span> variation
+  * <span class="hljs-attribute">price</span>: optional The price <span class="hljs-keyword">of</span> the variation <span class="hljs-keyword">when</span> the user purchases one
+  * <span class="hljs-attribute">shipping</span>: optional The shipping <span class="hljs-keyword">of</span> the variation <span class="hljs-keyword">when</span> the user purchases one
+  * <span class="hljs-attribute">enabled</span>: optional True <span class="hljs-keyword">if</span> the variation <span class="hljs-keyword">is</span> <span class="hljs-keyword">for</span> sale, False <span class="hljs-keyword">if</span> you need to halt sales.
+  * <span class="hljs-attribute">size</span>: optional The size <span class="hljs-keyword">of</span> the variation. <span class="hljs-attribute">Example</span>: Large, Medium, Small, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7.5</span>
+  * <span class="hljs-attribute">color</span>: optional The color <span class="hljs-keyword">of</span> the variation. <span class="hljs-attribute">Example</span>: red, blue, green
+  * <span class="hljs-attribute">msrp</span>: optional Manufacturer<span class="hljs-string">'s Suggested Retail Price.
+  * shipping_time: optional The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 5-10
+  * main_image: optional URL of a photo for this variant. Provide this when you have different pictures for different variant of the product. If left out, it'</span>ll use the main_image <span class="hljs-keyword">of</span> the product <span class="hljs-reserved">with</span> the provided parent_sku. Link directly to the image, <span class="hljs-keyword">not</span> the page where it <span class="hljs-keyword">is</span> located. We accept JPEG, PNG <span class="hljs-keyword">or</span> GIF format. Images should be at least <span class="hljs-number">100</span> x <span class="hljs-number">100</span> pixels <span class="hljs-keyword">in</span> size.</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateVariant</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@updateVariantJSON</span> args
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">updateVariantJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/variant/update'</span>, args
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Enable a Product Variation
+  
+  * <span class="hljs-attribute">sku</span>: The unique identifier <span class="hljs-keyword">for</span> the item you would like to update</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">enableVariant</span>: <span class="hljs-function"><span class="hljs-params">(sku, callback)</span> -&gt;</span>
+    <span class="hljs-property">@enableVariantJSON</span> sku
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">enableVariantJSON</span>: <span class="hljs-function"><span class="hljs-params">(sku, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/variant/enable'</span>, <span class="hljs-attribute">sku</span>: sku
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Disable a Product Variation
+  
+  * <span class="hljs-attribute">sku</span>: The unique identifier <span class="hljs-keyword">for</span> the item you would like to update</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">disableVariant</span>: <span class="hljs-function"><span class="hljs-params">(sku, callback)</span> -&gt;</span>
+    <span class="hljs-property">@disableVariantJSON</span> sku
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">disableVariantJSON</span>: <span class="hljs-function"><span class="hljs-params">(sku, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/variant/disable'</span>, <span class="hljs-attribute">sku</span>: sku
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Order
+  ---------
+  
+  Retrieves the details <span class="hljs-keyword">of</span> an existing order.</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">order</span>: <span class="hljs-function"><span class="hljs-params">(id, callback)</span> -&gt;</span>
+    <span class="hljs-property">@orderJSON</span> id
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+      
+  <span class="hljs-attribute">orderJSON</span>: <span class="hljs-function"><span class="hljs-params">(id, callback)</span> -&gt;</span>
+    <span class="hljs-property">@get</span> <span class="hljs-string">'/order'</span>, <span class="hljs-attribute">id</span>: id
+      .nodeify callback</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Retrieve Recently Changed Orders
+  
+  * <span class="hljs-attribute">start</span>: optional An offset into the list <span class="hljs-keyword">of</span> returned items. Use <span class="hljs-number">0</span> to start at the beginning. The API will <span class="hljs-keyword">return</span> the requested number <span class="hljs-keyword">of</span> items starting at <span class="hljs-keyword">this</span> offset. Default to <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> supplied
+  * <span class="hljs-attribute">limit</span>: optionalA limit <span class="hljs-literal">on</span> the number <span class="hljs-keyword">of</span> products that can be returned. Limit can range from <span class="hljs-number">1</span> to <span class="hljs-number">500</span> items <span class="hljs-keyword">and</span> the <span class="hljs-reserved">default</span> <span class="hljs-keyword">is</span> <span class="hljs-number">50</span>
+  * <span class="hljs-attribute">since</span>: optional Collect all the orders that have been updated since the time value passed into <span class="hljs-keyword">this</span> parameter. Fetches from beginning <span class="hljs-keyword">of</span> time <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> specified. We accept <span class="hljs-number">2</span> formats, one <span class="hljs-reserved">with</span> precision down to day <span class="hljs-keyword">and</span> one <span class="hljs-reserved">with</span> precision down to seconds. <span class="hljs-attribute">Example</span>: Jan <span class="hljs-number">20</span>th, <span class="hljs-number">2014</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2014</span>-<span class="hljs-number">01</span>-<span class="hljs-number">20</span>, Jan <span class="hljs-number">20</span>th, <span class="hljs-number">2014</span> <span class="hljs-number">20</span>:<span class="hljs-number">10</span>:<span class="hljs-number">20</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2014</span>-<span class="hljs-number">01</span>-<span class="hljs-number">20</span><span class="hljs-attribute">T20</span>:<span class="hljs-number">10</span>:<span class="hljs-number">20.</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">orders</span>: <span class="hljs-function"><span class="hljs-params">(start, limit, since, callback)</span> -&gt;</span>
+    <span class="hljs-property">@ordersJSON</span> start, limit, since
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+      
+  <span class="hljs-attribute">ordersJSON</span>: <span class="hljs-function"><span class="hljs-params">(start = <span class="hljs-number">0</span>, limit = <span class="hljs-number">50</span>, since = <span class="hljs-string">''</span>, callback)</span> -&gt;</span>
+    <span class="hljs-property">@get</span> <span class="hljs-string">'/order/multi-get'</span>,
+      <span class="hljs-attribute">start</span>: start
+      <span class="hljs-attribute">limit</span>: limit
+      <span class="hljs-attribute">since</span>: since
+    .nodeify callback</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Retrieve Unfulfilled Orders
+  
+  * <span class="hljs-attribute">start</span>: optional An offset into the list <span class="hljs-keyword">of</span> returned items. Use <span class="hljs-number">0</span> to start at the beginning. The API will <span class="hljs-keyword">return</span> the requested number <span class="hljs-keyword">of</span> items starting at <span class="hljs-keyword">this</span> offset. Default to <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> supplied
+  * <span class="hljs-attribute">limit</span>: optionalA limit <span class="hljs-literal">on</span> the number <span class="hljs-keyword">of</span> products that can be returned. Limit can range from <span class="hljs-number">1</span> to <span class="hljs-number">500</span> items <span class="hljs-keyword">and</span> the <span class="hljs-reserved">default</span> <span class="hljs-keyword">is</span> <span class="hljs-number">50</span>
+  * <span class="hljs-attribute">since</span>: optional Collect all the orders that have been updated since the time value passed into <span class="hljs-keyword">this</span> parameter. Fetches from beginning <span class="hljs-keyword">of</span> time <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> specified. We accept <span class="hljs-number">2</span> formats, one <span class="hljs-reserved">with</span> precision down to day <span class="hljs-keyword">and</span> one <span class="hljs-reserved">with</span> precision down to seconds. <span class="hljs-attribute">Example</span>: Jan <span class="hljs-number">20</span>th, <span class="hljs-number">2014</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2014</span>-<span class="hljs-number">01</span>-<span class="hljs-number">20</span>, Jan <span class="hljs-number">20</span>th, <span class="hljs-number">2014</span> <span class="hljs-number">20</span>:<span class="hljs-number">10</span>:<span class="hljs-number">20</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2014</span>-<span class="hljs-number">01</span>-<span class="hljs-number">20</span><span class="hljs-attribute">T20</span>:<span class="hljs-number">10</span>:<span class="hljs-number">20.</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">unfullfiledOrders</span>: <span class="hljs-function"><span class="hljs-params">(start, limit, since, callback)</span> -&gt;</span>
+    <span class="hljs-property">@unfullfiledOrdersJSON</span> start, limit, since
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+      
+  <span class="hljs-attribute">unfullfiledOrdersJSON</span>: <span class="hljs-function"><span class="hljs-params">(start = <span class="hljs-number">0</span>, limit = <span class="hljs-number">50</span>, since = <span class="hljs-string">''</span>, callback)</span> -&gt;</span>
+    <span class="hljs-property">@get</span> <span class="hljs-string">'/order/get-fulfill'</span>,
+      <span class="hljs-attribute">start</span>: start
+      <span class="hljs-attribute">limit</span>: limit
+      <span class="hljs-attribute">since</span>: since
+    .nodeify callback</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Fulfill an order
+  
+  * <span class="hljs-attribute">id</span>: Wish<span class="hljs-string">'s unique identifier for the order, or '</span>order_id<span class="hljs-string">' in the Order object
+  * tracking_provider: The carrier that will be shipping your package to its destination
+  * tracking_number: optional The unique identifier that your carrier provided so that the user can track their package as it is being delivered. Tracking number should only contain alphanumeric characters with no space between them.
+  * ship_note: optional A note to the user when you marked the order as shipped
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">fulfillOrder</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@fulfillOrderJSON</span> args
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">fulfillOrderJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/order/fulfill-one'</span>, args
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Refund/Cancel an order
+  
+  * <span class="hljs-attribute">id</span>: Wish<span class="hljs-string">'s unique identifier for the order, or '</span>order_id<span class="hljs-string">' in the Order object
+  * reason_code: An integer representing the reason for the refund. Check the table between for accepted reason codes
+  * reason_note: optional A note to the user explaining reason for the refund. This field is required if reason_code is -1(Other)
+  
+  Refund Reason Codes
+  0 No More Inventory
+  1 Unable to Ship
+  2 Customer Requested Refund
+  3 Item Damaged
+  7 Received Wrong Item
+  8 Item does not Fit
+  9 Arrived Late or Missing
+  -1 Other, if none of the reasons above apply. reason_note is required if this is used as reason_code
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">refundOrder</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@refundOrderJSON</span> args
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">cancelOrder</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@refundOrder</span> args, callback
+  
+  <span class="hljs-attribute">refundOrderJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/order/refund'</span>, args
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Modify Tracking <span class="hljs-keyword">of</span> a Shipped Order
+  
+  * <span class="hljs-attribute">id</span>: Wish<span class="hljs-string">'s unique identifier for the order, or '</span>order_id<span class="hljs-string">' in the Order object
+  * tracking_provider: The carrier that will be shipping your package to its destination
+  * tracking_number: optional The unique identifier that your carrier provided so that the user can track their package as it is being delivered. Tracking number should only contain alphanumeric characters with no space between them.
+  * ship_note: optional A note to the user when you marked the order as shipped
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">modifyOrder</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@modifyOrderJSON</span> args
+      .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
+      .nodeify callback
+  
+  <span class="hljs-attribute">modifyOrderJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/order/modify-tracking'</span>, args
+    .nodeify(callback)</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
