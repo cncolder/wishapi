@@ -2,17 +2,17 @@ errors = require 'errors'
 
 
 errors.create
-  name: 'InvalidIdError'
+  name: 'ParamInvalidError'
   code: 1000
   
 errors.create
-  name: 'NotFoundError'
-  code: 1004
-
-errors.create
-  name: 'ParamError'
+  name: 'ParamMissingError'
   defaultMessage: 'Required Param Missing'
   code: 1001
+
+errors.create
+  name: 'NotFoundError'
+  code: 1004
 
 errors.create
   name: 'AuthError'

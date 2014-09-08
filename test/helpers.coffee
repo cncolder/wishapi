@@ -11,7 +11,7 @@ chaiAsPromised = require 'chai-as-promised'
 should = do chai.should
 chai.use chaiAsPromised
 
-do nock.disableNetConnect
+nock.disableNetConnect()
 # do nock.recorder.rec
 
 
