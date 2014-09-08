@@ -11,6 +11,27 @@
   <div id="container">
     <div id="background"></div>
     
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="errors.html">
+                errors.coffee
+              </a>
+            
+              
+              <a class="source" href="merchant.html">
+                merchant.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
     <ul class="sections">
         
           <li id="title">
@@ -46,7 +67,8 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="merchant">Merchant</h1>
+              <hr>
+<h1 id="merchant">Merchant</h1>
 
             </div>
             
@@ -60,6 +82,7 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
               <p><strong>Merchant</strong> use for invoke <a href="https://merchant.wish.com/documentation/api">Wish Merchant API</a>. For more infomation please visit <a href="https://merchant.wish.com">The Wish merchant platform</a>.</p>
+<hr>
 
             </div>
             
@@ -74,7 +97,7 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="new-merchant">new Merchant</h2>
+              <h2 id="new">New</h2>
 
             </div>
             
@@ -87,16 +110,22 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>create a new instance.</p>
-<ul>
-<li>key: Api key of wish.
-Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official document</a> for more info.</li>
+              <p><strong>Create a new instance</strong></p>
+<p><code>new Merchant({ key, [sandbox], [timeout] })</code></p>
+<p>Arguments</p>
+<ol>
+<li>options (Object)<ul>
+<li>key: Api key of wish. Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official document</a> for more info.</li>
 <li>sandbox: If <code>true</code> will invoke sandbox api for test. Default <code>false</code>.</li>
 <li>timeout: Milliseconds wait the respond of api. Default 20s <code>(20 * 1000)</code>.</li>
 </ul>
-<p>return a new instance.</p>
-<pre><code class="lang-coffee">merchant = <span class="hljs-keyword">new</span> Merchant <span class="hljs-attribute">key</span>: <span class="hljs-string">'your api key here'</span>
+</li>
+</ol>
+<p>Return a new instance.</p>
+<p>Example</p>
+<pre><code class="lang-coffee"><span class="hljs-reserved">var</span> api = <span class="hljs-keyword">new</span> Merchant({<span class="hljs-attribute">key</span>: <span class="hljs-string">'your api key here'</span>});
 </code></pre>
+<hr>
 
             </div>
             
@@ -118,7 +147,51 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Format json result. flatten for javascript usage.</p>
+              <p>Format json result to flatten javascript object.</p>
+<p>Example</p>
+<pre>
+Before
+{ success: <del>'True'</del> }
+After
+{ success: true }
+</pre>
+
+<pre>
+Before
+{
+  <del>Product: {</del>
+    name: 'Fancy toy',
+    tags: [{
+      <del>Tag: {</del> id: 'toy', name: 'toy' <del>}</del>
+    }]
+    variants: [{
+      <del>Variant: {</del> price: <del>'10.5'</del>, enable: <del>'True' }</del>
+    }]
+  <del>}</del>
+}
+After
+{
+  name: 'Fancy toy'
+  tags: [{ id: 'toy', name: 'toy' }]
+  variants: [{ price: 10.5, enable: true }]
+}
+</pre>
+
+<p><pre>
+Before
+{
+  <del>Order: {</del>
+    <del>ShippingDetail: {</del> country: ‘US’ <del>}</del>,
+    order_time: <del>‘2013-12-06T20:20:20’</del>
+  <del>}</del>
+}
+After
+{
+  country: ‘US’,
+  order_time: new Date(…)
+}
+</pre></p>
+<hr>
 
             </div>
             
@@ -291,8 +364,10 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Test if api key is valid.</p>
+              <p><code>authTest( [callback] )</code></p>
+<p>Test if api key is valid.</p>
 <p>return <code>{success: true}</code> if success. otherwise error.</p>
+<hr>
 
             </div>
             
@@ -327,11 +402,15 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Retrieve the details about a product which exists on the Wish platform.</p>
-<ul>
-<li>id: The unique wish identifier for this product</li>
-</ul>
-<p>return a product data.</p>
+              <p><code>product( id, [callback] )</code></p>
+<p>Retrieve the details about a product which exists on the Wish platform.</p>
+<p>Arguments</p>
+<ol>
+<li>id (string): The unique wish identifier for this product</li>
+<li>callback (function): err, result.</li>
+</ol>
+<p>Return product data.</p>
+<hr>
 
             </div>
             
@@ -341,6 +420,7 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
       .nodeify callback
   
   <span class="hljs-attribute">productJSON</span>: <span class="hljs-function"><span class="hljs-params">(id, callback)</span> -&gt;</span>
+    id = id.id <span class="hljs-keyword">if</span> id.id
     <span class="hljs-property">@get</span> <span class="hljs-string">'/product'</span>, <span class="hljs-attribute">id</span>: id
       .nodeify callback</pre></div></div>
             
@@ -353,12 +433,16 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>List all Products</p>
-<ul>
+              <p><code>products( [start], [limit], [callback] )</code></p>
+<p>List all Products</p>
+<p>Arguments</p>
+<ol>
 <li>start: <em>optional</em> An offset into the list of returned items. Use 0 to start at the beginning. The API will return the requested number of items starting at this offset. Default to 0 if not supplied.</li>
 <li>limit: <em>optional</em> A limit on the number of products that can be returned. Limit can range from 1 to 500 items and the default is 50</li>
-</ul>
-<p>return an product array.</p>
+<li>callback: err, products.</li>
+</ol>
+<p>Return an products array.</p>
+<hr>
 
             </div>
             
@@ -382,8 +466,11 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Create a Product</p>
-<ul>
+              <p><code>createProduct( product, [callback] )</code></p>
+<p>Create a Product</p>
+<p>Arguments</p>
+<ol>
+<li>product<ul>
 <li>name: Name of the product as shown to users on Wish</li>
 <li>description: Description of the product. Should not contain HTML. If you want a new line use “\n”.</li>
 <li>tags: Comma separated list of strings that describe the product. Only 10 are allowed. Any tags past 10 will be ignored.</li>
@@ -396,22 +483,26 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
 <li>msrp: <em>optional</em> Manufacturer’s Suggested Retail Price. This field is recommended as it will show as a strikethrough price on Wish and appears above the selling price for the product.</li>
 <li>shipping_time: <em>optional</em> The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 15-20</li>
 <li>main_image: URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.</li>
-<li>parent_sku: <strong>optional</strong> When defining a variant of a product we must know which product to attach the variation to. parent_sku is the unique id of the product that you can use later when using the add product variation API.</li>
+<li>parent_sku: <em>optional</em> When defining a variant of a product we must know which product to attach the variation to. parent_sku is the unique id of the product that you can use later when using the add product variation API.</li>
 <li>brand: <em>optional</em> Brand or manufacturer of your product</li>
 <li>landing_page_url: <em>optional</em> URL on your website containing the product details</li>
 <li>upc: <em>optional</em> 12-digit Universal Product Codes (UPC)-contains no letters or other characters</li>
 <li>extra_images: <em>optional</em> URL of extra photos of your product. Link directly to the image, not the page where it is located. Same rules apply as main_image. You can specify one or more additional images separated by the character ‘|’</li>
 </ul>
+</li>
+<li>callback: err, product.</li>
+</ol>
+<hr>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">createProduct</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
-    <span class="hljs-property">@createProductJSON</span> args
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">createProduct</span>: <span class="hljs-function"><span class="hljs-params">(product, callback)</span> -&gt;</span>
+    <span class="hljs-property">@createProductJSON</span> product
       .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
       .nodeify callback
   
-  <span class="hljs-attribute">createProductJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
-    <span class="hljs-property">@post</span> <span class="hljs-string">'/product/add'</span>, args
+  <span class="hljs-attribute">createProductJSON</span>: <span class="hljs-function"><span class="hljs-params">(product, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/product/add'</span>, product
     .nodeify(callback)</pre></div></div>
             
         </li>
@@ -423,8 +514,11 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Update a Product</p>
-<ul>
+              <p><code>updateProduct( product, [callback] )</code></p>
+<p>Update a Product</p>
+<p>Arguments</p>
+<ol>
+<li>product<ul>
 <li>id: Must provide either id or parent_sku Wish’s unique identifier for the product you would like to update</li>
 <li>parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update</li>
 <li>name: <em>optional</em> Name of the product as shown to users</li>
@@ -436,16 +530,20 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
 <li>main_image: <em>optional</em> URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.</li>
 <li>extra_images: <em>optional</em> URL of a photo of your product. Link directly to the image, not the page where it is located. Same rules apply as main_image. You can specify one or more additional images separated by the character ‘|’</li>
 </ul>
+</li>
+<li>callback: err, null</li>
+</ol>
+<hr>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateProduct</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
-    <span class="hljs-property">@updateProductJSON</span> args
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateProduct</span>: <span class="hljs-function"><span class="hljs-params">(product, callback)</span> -&gt;</span>
+    <span class="hljs-property">@updateProductJSON</span> product
       .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> json.data
       .nodeify callback
   
-  <span class="hljs-attribute">updateProductJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
-    <span class="hljs-property">@post</span> <span class="hljs-string">'/product/update'</span>, args
+  <span class="hljs-attribute">updateProductJSON</span>: <span class="hljs-function"><span class="hljs-params">(product, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/product/update'</span>, product
     .nodeify(callback)</pre></div></div>
             
         </li>
@@ -457,11 +555,18 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Enable a Product</p>
-<ul>
+              <p>enableProduct( {id/parent_sku}, [callback] )`</p>
+<p>Enable a Product</p>
+<p>Arguments</p>
+<ol>
+<li>object<ul>
 <li>id: Must provide either id or parent_sku Wish’s unique identifier for the product you would like to update</li>
 <li>parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update</li>
 </ul>
+</li>
+<li>callback: err, {}</li>
+</ol>
+<hr>
 
             </div>
             
@@ -483,11 +588,10 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Disable a Product</p>
-<ul>
-<li>id: Must provide either id or parent_sku Wish’s unique identifier for the product you would like to update</li>
-<li>parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update</li>
-</ul>
+              <p><code>disableProduct( {id/parent_sku}, [callback] )</code></p>
+<p>Disable a Product</p>
+<p>Arguments same as <code>enableProduct</code></p>
+<hr>
 
             </div>
             
@@ -522,8 +626,15 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>Retrieves the details of an existing product variation.</p>
+              <p><code>variant( sku, [callback] )</code></p>
+<p>Retrieves the details of an existing product variation.</p>
 <p>Be careful: SKU is case sensitive.</p>
+<p>Arguments</p>
+<ol>
+<li>sku</li>
+<li>callback: err, variant</li>
+</ol>
+<hr>
 
             </div>
             
@@ -545,7 +656,9 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>List all Product Variations</p>
+              <p><code>variants( [start], [limit], [callback] )</code></p>
+<p>List all Product Variations</p>
+<hr>
 
             </div>
             
@@ -569,8 +682,11 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>Create a Product Variation</p>
-<ul>
+              <p><code>createVariant( variant, [callback] )</code></p>
+<p>Create a Product Variation</p>
+<p>Arguments</p>
+<ol>
+<li>variant<ul>
 <li>parent_sku: The parent_sku of the product this new product variation should be added to. If the product is missing a parent_sku, then this should be the SKU of a product variation of the product</li>
 <li>sku: The unique identifier that your system uses to recognize this variation</li>
 <li>color: <em>optional</em> The color of the variation. Example: red, blue, green</li>
@@ -582,16 +698,20 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
 <li>shipping_time: <em>optional</em> The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 15-20</li>
 <li>main_image: URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.</li>
 </ul>
+</li>
+<li>callback: err, variant</li>
+</ol>
+<hr>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">createVariant</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
-    <span class="hljs-property">@createVariantJSON</span> args
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">createVariant</span>: <span class="hljs-function"><span class="hljs-params">(variant, callback)</span> -&gt;</span>
+    <span class="hljs-property">@createVariantJSON</span> variant
       .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
       .nodeify callback
   
-  <span class="hljs-attribute">createVariantJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
-    <span class="hljs-property">@post</span> <span class="hljs-string">'/variant/add'</span>, args
+  <span class="hljs-attribute">createVariantJSON</span>: <span class="hljs-function"><span class="hljs-params">(variant, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/variant/add'</span>, variant
     .nodeify(callback)</pre></div></div>
             
         </li>
@@ -603,8 +723,11 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>Update a Product Variation</p>
-<ul>
+              <p><code>updateVariant( variant, [callback] )</code></p>
+<p>Update a Product Variation</p>
+<p>Arguments</p>
+<ol>
+<li>variant<ul>
 <li>sku: The unique identifier for the variation you would like to update</li>
 <li>inventory: <em>optional</em> The physical quantities you have for this variation</li>
 <li>price: <em>optional</em> The price of the variation when the user purchases one</li>
@@ -616,16 +739,20 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
 <li>shipping_time: <em>optional</em> The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 5-10</li>
 <li>main_image: <em>optional</em> URL of a photo for this variant. Provide this when you have different pictures for different variant of the product. If left out, it’ll use the main_image of the productwith the provided parent_sku. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.</li>
 </ul>
+</li>
+<li>callback: err, {}</li>
+</ol>
+<hr>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateVariant</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
-    <span class="hljs-property">@updateVariantJSON</span> args
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateVariant</span>: <span class="hljs-function"><span class="hljs-params">(variant, callback)</span> -&gt;</span>
+    <span class="hljs-property">@updateVariantJSON</span> variant
       .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> json.data
       .nodeify callback
   
-  <span class="hljs-attribute">updateVariantJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
-    <span class="hljs-property">@post</span> <span class="hljs-string">'/variant/update'</span>, args
+  <span class="hljs-attribute">updateVariantJSON</span>: <span class="hljs-function"><span class="hljs-params">(variant, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/variant/update'</span>, variant
     .nodeify(callback)</pre></div></div>
             
         </li>
@@ -637,10 +764,14 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>Enable a Product Variation</p>
-<ul>
+              <p><code>enableVariant( sku, [callback] )</code></p>
+<p>Enable a Product Variation</p>
+<p>Arguments</p>
+<ol>
 <li>sku: The unique identifier for the item you would like to update</li>
-</ul>
+<li>callback: err, {}</li>
+</ol>
+<hr>
 
             </div>
             
@@ -662,10 +793,10 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>Disable a Product Variation</p>
-<ul>
-<li>sku: The unique identifier for the item you would like to update</li>
-</ul>
+              <p><code>disableVariant( sku, [callback] )</code></p>
+<p>Disable a Product Variation</p>
+<p>Arguments same as <code>enableVariant</code></p>
+<hr>
 
             </div>
             
@@ -700,7 +831,14 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>Retrieves the details of an existing order.</p>
+              <p><code>order( id, [callback] )</code></p>
+<p>Retrieves the details of an existing order.</p>
+<p>Arguments</p>
+<ol>
+<li>id</li>
+<li>callback: err, order</li>
+</ol>
+<hr>
 
             </div>
             
@@ -722,12 +860,16 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Retrieve Recently Changed Orders</p>
-<ul>
+              <p><code>orders( [start], [limit], [since], [callback] )</code></p>
+<p>Retrieve Recently Changed Orders</p>
+<p>Arguments</p>
+<ol>
 <li>start: <em>optional</em> An offset into the list of returned items. Use 0 to start at the beginning. The API will return the requested number of items starting at this offset. Default to 0 if not supplied</li>
 <li>limit: <em>optional</em> A limit on the number of products that can be returned. Limit can range from 1 to 500 items and the default is 50</li>
 <li>since: <em>optional</em> Collect all the orders that have been updated since the time value passed into this parameter. Fetches from beginning of time if not specified. We accept 2 formats, one with precision down to day and one with precision down to seconds. Example: <code>Jan 20th, 2014</code> is <code>2014-01-20</code>, <code>Jan 20th, 2014 20:10:20</code> is <code>2014-01-20T20:10:20</code>.</li>
-</ul>
+<li>callback: err, orders.</li>
+</ol>
+<hr>
 
             </div>
             
@@ -752,12 +894,10 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>Retrieve Unfulfilled Orders</p>
-<ul>
-<li>start: <em>optional</em> An offset into the list of returned items. Use 0 to start at the beginning. The API will return the requested number of items starting at this offset. Default to 0 if not supplied</li>
-<li>limit: <em>optional</em> A limit on the number of products that can be returned. Limit can range from 1 to 500 items and the default is 50</li>
-<li>since: <em>optional</em> Collect all the orders that have been updated since the time value passed into this parameter. Fetches from beginning of time if not specified. We accept 2 formats, one with precision down to day and one with precision down to seconds. Example: <code>Jan 20th, 2014</code> is <code>2014-01-20</code>, <code>Jan 20th, 2014 20:10:20</code> is <code>2014-01-20T20:10:20</code>.</li>
-</ul>
+              <p><code>unfullfiledOrders( [start], [limit], [since], [callback] )</code></p>
+<p>Retrieve Unfulfilled Orders</p>
+<p>Arguments same as <code>orders</code></p>
+<hr>
 
             </div>
             
@@ -782,23 +922,30 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>Fulfill an order</p>
-<ul>
+              <p><code>fulfillOrder( order, [callback] )</code></p>
+<p>Fulfill an order</p>
+<p>Arguments</p>
+<ol>
+<li>order<ul>
 <li>id: Wish’s unique identifier for the order, or ‘order_id’ in the Order object</li>
 <li>tracking_provider: The carrier that will be shipping your package to its destination</li>
 <li>tracking_number: <em>optional</em> The unique identifier that your carrier provided so that the user can track their package as it is being delivered. Tracking number should only contain alphanumeric characters with no space between them.</li>
 <li>ship_note: <em>optional</em> A note to the user when you marked the order as shipped</li>
 </ul>
+</li>
+<li>callback: err, { success: true }</li>
+</ol>
+<hr>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">fulfillOrder</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
-    <span class="hljs-property">@fulfillOrderJSON</span> args
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">fulfillOrder</span>: <span class="hljs-function"><span class="hljs-params">(order, callback)</span> -&gt;</span>
+    <span class="hljs-property">@fulfillOrderJSON</span> order
       .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(json)</span> =&gt;</span> <span class="hljs-property">@format</span> json.data
       .nodeify callback
   
-  <span class="hljs-attribute">fulfillOrderJSON</span>: <span class="hljs-function"><span class="hljs-params">(args, callback)</span> -&gt;</span>
-    <span class="hljs-property">@post</span> <span class="hljs-string">'/order/fulfill-one'</span>, args
+  <span class="hljs-attribute">fulfillOrderJSON</span>: <span class="hljs-function"><span class="hljs-params">(order, callback)</span> -&gt;</span>
+    <span class="hljs-property">@post</span> <span class="hljs-string">'/order/fulfill-one'</span>, order
     .nodeify(callback)</pre></div></div>
             
         </li>
@@ -810,14 +957,13 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>Refund/Cancel an order</p>
-<ul>
+              <p><code>refundOrder( args, [callback] )</code></p>
+<p>Refund/Cancel an order</p>
+<p>Arguments</p>
+<ol>
+<li>object<ul>
 <li>id: Wish’s unique identifier for the order, or ‘order_id’ in the Order object</li>
-<li>reason_code: An integer representing the reason for the refund. Check the table between for accepted reason codes</li>
-<li>reason_note: <em>optional</em> A note to the user explaining reason for the refund. This field is required if reason_code is -1(Other)</li>
-</ul>
-<p>Refund Reason Codes</p>
-<ul>
+<li>reason_code: An integer representing the reason for the refund. Check the table between for accepted reason codes<ul>
 <li>0 No More Inventory</li>
 <li>1 Unable to Ship</li>
 <li>2 Customer Requested Refund</li>
@@ -827,6 +973,13 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
 <li>9 Arrived Late or Missing</li>
 <li>-1 Other, if none of the reasons above apply. reason_note is required if this is used asreason_code</li>
 </ul>
+</li>
+<li>reason_note: <em>optional</em> A note to the user explaining reason for the refund. This field is required if reason_code is -1(Other)</li>
+</ul>
+</li>
+<li>callback: err, { success: true }</li>
+</ol>
+<hr>
 
             </div>
             
@@ -851,13 +1004,20 @@ Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>Modify Tracking of a Shipped Order</p>
-<ul>
+              <p><code>modifyOrder( args, [callback] )</code></p>
+<p>Modify Tracking of a Shipped Order</p>
+<p>Arguments</p>
+<ol>
+<li>object<ul>
 <li>id: Wish’s unique identifier for the order, or ‘order_id’ in the Order object</li>
 <li>tracking_provider: The carrier that will be shipping your package to its destination</li>
 <li>tracking_number: <em>optional</em> The unique identifier that your carrier provided so that the user can track their package as it is being delivered. Tracking number should only contain alphanumeric characters with no space between them.</li>
 <li>ship_note: <em>optional</em> A note to the user when you marked the order as shipped</li>
 </ul>
+</li>
+<li>callback: err, { success: true }</li>
+</ol>
+<hr>
 
             </div>
             
