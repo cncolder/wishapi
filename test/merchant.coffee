@@ -155,6 +155,21 @@ describe 'Merchant', ->
           sandbox: true
           key: 'test'
         assert.becomes merchant.authTest(), success: true
+    
+    describe 'nodeify callback', ->
+      before ->
+        wish
+          .get '/api/v1/auth_test?key=test'
+          .reply 200,
+            {"message":"","code":0,"data":{"success":true}}
+      
+      it 'should callback with err and result', (done) ->
+        merchant = new Merchant
+          sandbox: true
+          key: 'test'
+        merchant.authTest (err, result) ->
+          assert.equal result.success, true
+          done()
   
   
   describe 'product', ->
