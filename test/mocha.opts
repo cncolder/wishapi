@@ -1,2 +1,2 @@
 --compilers coffee:coffee-script/register
---check-leaks
+--require blanket

@@ -1,6 +1,13 @@
 {
     "author": "Colder <cncolder@gmail.com> (http://blog.vitarn.com)",
     "bundleDependencies": [],
+    "config": {
+        "blanket": {
+            "data-cover-never": "node_modules",
+            "loader": "./node-loaders/coffee-script",
+            "pattern": "src"
+        }
+    },
     "dependencies": {
         "bluebird": "^2.3.2",
         "debug": "^1.0.4",
@@ -9,8 +16,10 @@
     },
     "description": "Wish.com api",
     "devDependencies": {
+        "blanket": "^1.1.6",
         "chai-as-promised": "^4.1.1",
         "coffee-script": "^1.8.0",
+        "coveralls": "^2.11.1",
         "del": "^0.1.2",
         "docco": "^0.6.3",
         "gulp": "^3.8.7",
@@ -19,6 +28,7 @@
         "gulp-mocha": "^1.0.0",
         "gulp-util": "^3.0.1",
         "mocha": "^1.21.4",
+        "mocha-lcov-reporter": "^0.0.1",
         "nock": "^0.46.0",
         "vinyl-source-stream": "^0.1.1"
     },
@@ -39,6 +49,7 @@
         "url": "git://github.com/cncolder/wishapi.git"
     },
     "scripts": {
+        "coveralls": "mocha --reporter mocha-lcov-reporter | coveralls",
         "prepublish": "gulp build",
         "test": "mocha"
     },
