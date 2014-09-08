@@ -11,37 +11,6 @@
   <div id="container">
     <div id="background"></div>
     
-      <ul id="jump_to">
-        <li>
-          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
-          <a class="small" href="javascript:void(0);">+</a>
-          <div id="jump_wrapper">
-          <div id="jump_page">
-            
-              
-              <a class="source" href="debug.html">
-                debug.coffee
-              </a>
-            
-              
-              <a class="source" href="errors.html">
-                errors.coffee
-              </a>
-            
-              
-              <a class="source" href="index.html">
-                index.coffee
-              </a>
-            
-              
-              <a class="source" href="merchant.html">
-                merchant.coffee
-              </a>
-            
-          </div>
-        </li>
-      </ul>
-    
     <ul class="sections">
         
           <li id="title">
@@ -77,14 +46,9 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <h1 id="merchant">Merchant</h1>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>Merchant
-========
-
-**Merchant** use <span class="hljs-keyword">for</span> invoke [Wish Merchant API](<span class="hljs-attribute">https</span>:<span class="hljs-regexp">//m</span>erchant.wish.com<span class="hljs-regexp">/documentation/api). For more infomation please visit [The Wish merchant platform](https:/</span>/merchant.wish.com).</pre></div></div>
             
         </li>
         
@@ -95,7 +59,7 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <p><strong>Merchant</strong> use for invoke <a href="https://merchant.wish.com/documentation/api">Wish Merchant API</a>. For more infomation please visit <a href="https://merchant.wish.com">The Wish merchant platform</a>.</p>
 
             </div>
             
@@ -110,24 +74,9 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <h2 id="new-merchant">new Merchant</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">new</span> Merchant
-  ------------
-  
-  create a <span class="hljs-keyword">new</span> instance.
-  
-  * <span class="hljs-attribute">key</span>: Api key <span class="hljs-keyword">of</span> wish. Read [official <span class="hljs-built_in">document</span>](<span class="hljs-attribute">https</span>:<span class="hljs-regexp">//m</span>erchant.wish.com/documentation/api<span class="hljs-comment">#get-api-key) for more info.</span>
-  * <span class="hljs-attribute">sandbox</span>: If `<span class="javascript"><span class="hljs-literal">true</span></span>` will invoke sandbox api <span class="hljs-keyword">for</span> test. Default `<span class="javascript"><span class="hljs-literal">false</span></span>`.
-  * <span class="hljs-attribute">timeout</span>: Milliseconds wait the respond <span class="hljs-keyword">of</span> api. Default <span class="hljs-number">20</span>s (<span class="hljs-number">20</span> * <span class="hljs-number">1000</span>).
-  
-  <span class="hljs-keyword">return</span> a <span class="hljs-keyword">new</span> instance.
-  
-  `<span class="javascript"></span>``<span class="javascript">coffee
-  merchant = <span class="hljs-keyword">new</span> Merchant key: <span class="hljs-string">'your api key here'</span>
-  </span>``<span class="javascript"></span>`</pre></div></div>
             
         </li>
         
@@ -138,7 +87,16 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <p>create a new instance.</p>
+<ul>
+<li>key: Api key of wish.
+Read <a href="https://merchant.wish.com/documentation/api#get-api-key">official document</a> for more info.</li>
+<li>sandbox: If <code>true</code> will invoke sandbox api for test. Default <code>false</code>.</li>
+<li>timeout: Milliseconds wait the respond of api. Default 20s <code>(20 * 1000)</code>.</li>
+</ul>
+<p>return a new instance.</p>
+<pre><code class="lang-coffee">merchant = <span class="hljs-keyword">new</span> Merchant <span class="hljs-attribute">key</span>: <span class="hljs-string">'your api key here'</span>
+</code></pre>
 
             </div>
             
@@ -149,9 +107,22 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
     <span class="hljs-property">@baseUrl</span> = <span class="hljs-keyword">if</span> <span class="hljs-property">@sandbox</span>
       <span class="hljs-string">'https://sandbox.merchant.wish.com/api/v1'</span>
     <span class="hljs-keyword">else</span>
-      <span class="hljs-string">'https://merchant.wish.com/api/v1'</span>
-  
-  <span class="hljs-attribute">format</span>: <span class="hljs-function"><span class="hljs-params">(json)</span> -&gt;</span>
+      <span class="hljs-string">'https://merchant.wish.com/api/v1'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Format json result. flatten for javascript usage.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">format</span>: <span class="hljs-function"><span class="hljs-params">(json)</span> -&gt;</span>
     <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> json.success <span class="hljs-keyword">is</span> <span class="hljs-string">'string'</span>
       json.success = json.success <span class="hljs-keyword">is</span> <span class="hljs-string">'True'</span>
       <span class="hljs-keyword">return</span> json
@@ -193,31 +164,43 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
     <span class="hljs-keyword">if</span> json.variants
       json.variants = <span class="hljs-property">@format</span> json.variants
     
-    json
-  
-  <span class="hljs-attribute">url</span>: <span class="hljs-function"><span class="hljs-params">(path, query)</span> -&gt;</span>
-    uri = url.parse <span class="hljs-property">@baseUrl</span>
-    uri.pathname += path
-    uri.path = <span class="hljs-string">''</span>
-    uri.query ?= {}
-    uri.query[key] = value <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">of</span> query</pre></div></div>
+    json</pre></div></div>
             
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>uri.query.key = @key</p>
+              <p>Append path and query to base url.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    url.format uri
-  
-  <span class="hljs-attribute">handle</span>: <span class="hljs-function"><span class="hljs-params">(promise)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">url</span>: <span class="hljs-function"><span class="hljs-params">(path, query)</span> -&gt;</span>
+    uri = url.parse <span class="hljs-property">@baseUrl</span>
+    uri.pathname += path
+    uri.path = <span class="hljs-string">''</span>
+    uri.query ?= {}
+    uri.query[key] = value <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">of</span> query
+    url.format uri</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Handle request. catch error.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">handle</span>: <span class="hljs-function"><span class="hljs-params">(promise)</span> -&gt;</span>
     promise
       .<span class="hljs-keyword">catch</span> <span class="hljs-function"><span class="hljs-params">([ res, body ])</span> -&gt;</span>
         debug <span class="hljs-string">'HTTP Status'</span>, res.statusCode
@@ -233,9 +216,22 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> code
           <span class="hljs-keyword">throw</span> errors.wish body
         <span class="hljs-keyword">else</span>
-          <span class="hljs-keyword">throw</span> errors.ServerError <span class="hljs-attribute">response</span>: body
-  
-  <span class="hljs-attribute">get</span>: <span class="hljs-function"><span class="hljs-params">(path, query = {})</span> -&gt;</span>
+          <span class="hljs-keyword">throw</span> errors.ServerError <span class="hljs-attribute">response</span>: body</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Request GET.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">get</span>: <span class="hljs-function"><span class="hljs-params">(path, query = {})</span> -&gt;</span>
     <span class="hljs-keyword">return</span> Promise.reject <span class="hljs-keyword">new</span> errors.ParamMissingError <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-property">@key</span>
     
     query.key = <span class="hljs-property">@key</span>
@@ -245,9 +241,22 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
     
     <span class="hljs-property">@handle</span> request.getAsync uri,
       <span class="hljs-attribute">json</span>:    <span class="hljs-literal">true</span>
-      <span class="hljs-attribute">timeout</span>: <span class="hljs-property">@timeout</span>
-    
-  <span class="hljs-attribute">post</span>: <span class="hljs-function"><span class="hljs-params">(path, form = {})</span> -&gt;</span>
+      <span class="hljs-attribute">timeout</span>: <span class="hljs-property">@timeout</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Request POST</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">post</span>: <span class="hljs-function"><span class="hljs-params">(path, form = {})</span> -&gt;</span>
     <span class="hljs-keyword">return</span> Promise.reject <span class="hljs-keyword">new</span> errors.ParamMissingError <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-property">@key</span>
     
     uri = <span class="hljs-property">@url</span> path
@@ -263,33 +272,27 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-7">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <h2 id="authentication">Authentication</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  Authentication
-  --------------
-  
-  Test <span class="hljs-keyword">if</span> api key <span class="hljs-keyword">is</span> valid.
-  
-  <span class="hljs-keyword">return</span> `<span class="javascript">{success: <span class="hljs-literal">true</span>}</span>` <span class="hljs-keyword">if</span> success. otherwise error.</pre></div></div>
             
         </li>
         
         
-        <li id="section-8">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <p>Test if api key is valid.</p>
+<p>return <code>{success: true}</code> if success. otherwise error.</p>
 
             </div>
             
@@ -305,35 +308,30 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-9">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <h2 id="product">Product</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  Product
-  -------
-  
-  Retrieve the details about a product which exists <span class="hljs-literal">on</span> the Wish platform.
-
-  * <span class="hljs-attribute">id</span>: The unique wish identifier <span class="hljs-keyword">for</span> <span class="hljs-keyword">this</span> product
-  
-  <span class="hljs-keyword">return</span> a product data.</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <p>Retrieve the details about a product which exists on the Wish platform.</p>
+<ul>
+<li>id: The unique wish identifier for this product</li>
+</ul>
+<p>return a product data.</p>
 
             </div>
             
@@ -349,33 +347,18 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-11">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  List all Products
-
-  * <span class="hljs-attribute">start</span>: **optional** An offset into the list <span class="hljs-keyword">of</span> returned items. Use <span class="hljs-number">0</span> to start at the beginning. The API will <span class="hljs-keyword">return</span> the requested number <span class="hljs-keyword">of</span> items starting at <span class="hljs-keyword">this</span> offset. Default to <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> supplied.
-  * <span class="hljs-attribute">limit</span>: **optional** A limit <span class="hljs-literal">on</span> the number <span class="hljs-keyword">of</span> products that can be returned. Limit can range from <span class="hljs-number">1</span> to <span class="hljs-number">500</span> items <span class="hljs-keyword">and</span> the <span class="hljs-reserved">default</span> <span class="hljs-keyword">is</span> <span class="hljs-number">50</span>
-  
-  <span class="hljs-keyword">return</span> an product array.</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>List all Products</p>
+<ul>
+<li>start: <em>optional</em> An offset into the list of returned items. Use 0 to start at the beginning. The API will return the requested number of items starting at this offset. Default to 0 if not supplied.</li>
+<li>limit: <em>optional</em> A limit on the number of products that can be returned. Limit can range from 1 to 500 items and the default is 50</li>
+</ul>
+<p>return an product array.</p>
 
             </div>
             
@@ -393,47 +376,32 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Create a Product
-  
-  * <span class="hljs-attribute">name</span>: Name <span class="hljs-keyword">of</span> the product as shown to users <span class="hljs-literal">on</span> Wish
-  * <span class="hljs-attribute">description</span>: Description <span class="hljs-keyword">of</span> the product. Should <span class="hljs-keyword">not</span> contain HTML. If you want a <span class="hljs-keyword">new</span> line use <span class="hljs-string">"\n"</span>.
-  * <span class="hljs-attribute">tags</span>: Comma separated list <span class="hljs-keyword">of</span> strings that describe the product. Only <span class="hljs-number">10</span> are allowed. Any tags past <span class="hljs-number">10</span> will be ignored.
-  * <span class="hljs-attribute">sku</span>: The unique identifier that your system uses to recognize <span class="hljs-keyword">this</span> product
-  * <span class="hljs-attribute">color</span>: optional The color <span class="hljs-keyword">of</span> the product. <span class="hljs-attribute">Example</span>: red, blue, green
-  * <span class="hljs-attribute">size</span>: optional The size <span class="hljs-keyword">of</span> the product. <span class="hljs-attribute">Example</span>: Large, Medium, Small, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7.5</span>
-  * <span class="hljs-attribute">inventory</span>: The physical quantities you have <span class="hljs-keyword">for</span> <span class="hljs-keyword">this</span> product
-  * <span class="hljs-attribute">price</span>: The price <span class="hljs-keyword">of</span> the product <span class="hljs-keyword">when</span> the user purchases one
-  * <span class="hljs-attribute">shipping</span>: The shipping <span class="hljs-keyword">of</span> the product <span class="hljs-keyword">when</span> the user purchases one
-  * <span class="hljs-attribute">msrp</span>: optional Manufacturer<span class="hljs-string">'s Suggested Retail Price. This field is recommended as it will show as a strikethrough price on Wish and appears above the selling price for the product.
-  * shipping_time: optional The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 15-20
-  * main_image: URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.
-  * parent_sku: **optional** When defining a variant of a product we must know which product to attach the variation to. parent_sku is the unique id of the product that you can use later when using the add product variation API.
-  * brand: optional Brand or manufacturer of your product
-  * landing_page_url: optional URL on your website containing the product details
-  * upc: optional 12-digit Universal Product Codes (UPC)-contains no letters or other characters
-  * extra_images: optional URL of extra photos of your product. Link directly to the image, not the page where it is located. Same rules apply as main_image. You can specify one or more additional images separated by the character '</span>|<span class="hljs-string">'
-</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Create a Product</p>
+<ul>
+<li>name: Name of the product as shown to users on Wish</li>
+<li>description: Description of the product. Should not contain HTML. If you want a new line use “\n”.</li>
+<li>tags: Comma separated list of strings that describe the product. Only 10 are allowed. Any tags past 10 will be ignored.</li>
+<li>sku: The unique identifier that your system uses to recognize this product</li>
+<li>color: <em>optional</em> The color of the product. Example: red, blue, green</li>
+<li>size: <em>optional</em> The size of the product. Example: Large, Medium, Small, 5, 6, 7.5</li>
+<li>inventory: The physical quantities you have for this product</li>
+<li>price: The price of the product when the user purchases one</li>
+<li>shipping: The shipping of the product when the user purchases one</li>
+<li>msrp: <em>optional</em> Manufacturer’s Suggested Retail Price. This field is recommended as it will show as a strikethrough price on Wish and appears above the selling price for the product.</li>
+<li>shipping_time: <em>optional</em> The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 15-20</li>
+<li>main_image: URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.</li>
+<li>parent_sku: <strong>optional</strong> When defining a variant of a product we must know which product to attach the variation to. parent_sku is the unique id of the product that you can use later when using the add product variation API.</li>
+<li>brand: <em>optional</em> Brand or manufacturer of your product</li>
+<li>landing_page_url: <em>optional</em> URL on your website containing the product details</li>
+<li>upc: <em>optional</em> 12-digit Universal Product Codes (UPC)-contains no letters or other characters</li>
+<li>extra_images: <em>optional</em> URL of extra photos of your product. Link directly to the image, not the page where it is located. Same rules apply as main_image. You can specify one or more additional images separated by the character ‘|’</li>
+</ul>
 
             </div>
             
@@ -449,40 +417,25 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Update a Product
-  
-  * <span class="hljs-attribute">id</span>: Must provide either id <span class="hljs-keyword">or</span> parent_sku Wish<span class="hljs-string">'s unique identifier for the product you would like to update
-  * parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update
-  * name: optional Name of the product as shown to users
-  * description: optional Description of the product. If you want a new line use "\n".
-  * tags: optional Comma separated list of strings. The tags passed into this parameter will completely replace the tags that are currently on the product
-  * brand: optional Brand or manufacturer of your product
-  * landing_page_url: optional URL on your website containing the product detail and buy button for the applicable product.
-  * upc: optional 12-digit Universal Product Codes (UPC)-contains no letters or other characters
-  * main_image: optional URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.
-  * extra_images: optional URL of a photo of your product. Link directly to the image, not the page where it is located. Same rules apply as main_image. You can specify one or more additional images separated by the character '</span>|<span class="hljs-string">'
-</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Update a Product</p>
+<ul>
+<li>id: Must provide either id or parent_sku Wish’s unique identifier for the product you would like to update</li>
+<li>parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update</li>
+<li>name: <em>optional</em> Name of the product as shown to users</li>
+<li>description: <em>optional</em> Description of the product. If you want a new line use “\n”.</li>
+<li>tags: <em>optional</em> Comma separated list of strings. The tags passed into this parameter will completely replace the tags that are currently on the product</li>
+<li>brand: <em>optional</em> Brand or manufacturer of your product</li>
+<li>landing_page_url: <em>optional</em> URL on your website containing the product detail and buy button for the applicable product.</li>
+<li>upc: <em>optional</em> 12-digit Universal Product Codes (UPC)-contains no letters or other characters</li>
+<li>main_image: <em>optional</em> URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.</li>
+<li>extra_images: <em>optional</em> URL of a photo of your product. Link directly to the image, not the page where it is located. Same rules apply as main_image. You can specify one or more additional images separated by the character ‘|’</li>
+</ul>
 
             </div>
             
@@ -498,32 +451,17 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Enable a Product
-  
-  * <span class="hljs-attribute">id</span>: Must provide either id <span class="hljs-keyword">or</span> parent_sku Wish<span class="hljs-string">'s unique identifier for the product you would like to update
-  * parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update
-</span></pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <p>Enable a Product</p>
+<ul>
+<li>id: Must provide either id or parent_sku Wish’s unique identifier for the product you would like to update</li>
+<li>parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update</li>
+</ul>
 
             </div>
             
@@ -545,26 +483,11 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Disable a Product
-  
-  * <span class="hljs-attribute">id</span>: Must provide either id <span class="hljs-keyword">or</span> parent_sku Wish<span class="hljs-string">'s unique identifier for the product you would like to update
-  * parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update
-</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Disable a Product</p>
+<ul>
+<li>id: Must provide either id or parent_sku Wish’s unique identifier for the product you would like to update</li>
+<li>parent_sku: Must provide either id or parent_sku The parent sku for the product you would like to update</li>
+</ul>
 
             </div>
             
@@ -580,33 +503,27 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h2 id="variation">Variation</h2>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Variation
-  ---------
-  
-  Retrieves the details <span class="hljs-keyword">of</span> an existing product variation.
-  
-  Be <span class="hljs-attribute">careful</span>: SKU <span class="hljs-keyword">is</span> <span class="hljs-reserved">case</span> sensitive.</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Retrieves the details of an existing product variation.</p>
+<p>Be careful: SKU is case sensitive.</p>
 
             </div>
             
@@ -622,28 +539,13 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  List all Product Variations</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>List all Product Variations</p>
 
             </div>
             
@@ -661,40 +563,25 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-25">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Create a Product Variation
-  
-  * <span class="hljs-attribute">parent_sku</span>: The parent_sku <span class="hljs-keyword">of</span> the product <span class="hljs-keyword">this</span> <span class="hljs-keyword">new</span> product variation should be added to. If the product <span class="hljs-keyword">is</span> missing a parent_sku, <span class="hljs-keyword">then</span> <span class="hljs-keyword">this</span> should be the SKU <span class="hljs-keyword">of</span> a product variation <span class="hljs-keyword">of</span> the product
-  * <span class="hljs-attribute">sku</span>: The unique identifier that your system uses to recognize <span class="hljs-keyword">this</span> variation
-  * <span class="hljs-attribute">color</span>: optional The color <span class="hljs-keyword">of</span> the variation. <span class="hljs-attribute">Example</span>: red, blue, green
-  * <span class="hljs-attribute">size</span>: optional The size <span class="hljs-keyword">of</span> the variation. <span class="hljs-attribute">Example</span>: Large, Medium, Small, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7.5</span>
-  * <span class="hljs-attribute">inventory</span>: The physical quantities you have <span class="hljs-keyword">for</span> <span class="hljs-keyword">this</span> variation
-  * <span class="hljs-attribute">price</span>: The price <span class="hljs-keyword">of</span> the variation <span class="hljs-keyword">when</span> the user purchases one
-  * <span class="hljs-attribute">shipping</span>: The shipping <span class="hljs-keyword">of</span> the variation <span class="hljs-keyword">when</span> the user purchases one
-  * <span class="hljs-attribute">msrp</span>: optional Manufacturer<span class="hljs-string">'s Suggested Retail Price. This field is recommended as it will show as a strikethrough price on Wish and appears above the selling price for the variation.
-  * shipping_time: optional The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 15-20
-  * main_image: URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.
-</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Create a Product Variation</p>
+<ul>
+<li>parent_sku: The parent_sku of the product this new product variation should be added to. If the product is missing a parent_sku, then this should be the SKU of a product variation of the product</li>
+<li>sku: The unique identifier that your system uses to recognize this variation</li>
+<li>color: <em>optional</em> The color of the variation. Example: red, blue, green</li>
+<li>size: <em>optional</em> The size of the variation. Example: Large, Medium, Small, 5, 6, 7.5</li>
+<li>inventory: The physical quantities you have for this variation</li>
+<li>price: The price of the variation when the user purchases one</li>
+<li>shipping: The shipping of the variation when the user purchases one</li>
+<li>msrp: <em>optional</em> Manufacturer’s Suggested Retail Price. This field is recommended as it will show as a strikethrough price on Wish and appears above the selling price for the variation.</li>
+<li>shipping_time: <em>optional</em> The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 15-20</li>
+<li>main_image: URL of a photo of your product. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.</li>
+</ul>
 
             </div>
             
@@ -710,39 +597,25 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-27">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Update a Product Variation
-  
-  * <span class="hljs-attribute">sku</span>: The unique identifier <span class="hljs-keyword">for</span> the variation you would like to update
-  * <span class="hljs-attribute">inventory</span>: optional The physical quantities you have <span class="hljs-keyword">for</span> <span class="hljs-keyword">this</span> variation
-  * <span class="hljs-attribute">price</span>: optional The price <span class="hljs-keyword">of</span> the variation <span class="hljs-keyword">when</span> the user purchases one
-  * <span class="hljs-attribute">shipping</span>: optional The shipping <span class="hljs-keyword">of</span> the variation <span class="hljs-keyword">when</span> the user purchases one
-  * <span class="hljs-attribute">enabled</span>: optional True <span class="hljs-keyword">if</span> the variation <span class="hljs-keyword">is</span> <span class="hljs-keyword">for</span> sale, False <span class="hljs-keyword">if</span> you need to halt sales.
-  * <span class="hljs-attribute">size</span>: optional The size <span class="hljs-keyword">of</span> the variation. <span class="hljs-attribute">Example</span>: Large, Medium, Small, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7.5</span>
-  * <span class="hljs-attribute">color</span>: optional The color <span class="hljs-keyword">of</span> the variation. <span class="hljs-attribute">Example</span>: red, blue, green
-  * <span class="hljs-attribute">msrp</span>: optional Manufacturer<span class="hljs-string">'s Suggested Retail Price.
-  * shipping_time: optional The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 5-10
-  * main_image: optional URL of a photo for this variant. Provide this when you have different pictures for different variant of the product. If left out, it'</span>ll use the main_image <span class="hljs-keyword">of</span> the product <span class="hljs-reserved">with</span> the provided parent_sku. Link directly to the image, <span class="hljs-keyword">not</span> the page where it <span class="hljs-keyword">is</span> located. We accept JPEG, PNG <span class="hljs-keyword">or</span> GIF format. Images should be at least <span class="hljs-number">100</span> x <span class="hljs-number">100</span> pixels <span class="hljs-keyword">in</span> size.</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Update a Product Variation</p>
+<ul>
+<li>sku: The unique identifier for the variation you would like to update</li>
+<li>inventory: <em>optional</em> The physical quantities you have for this variation</li>
+<li>price: <em>optional</em> The price of the variation when the user purchases one</li>
+<li>shipping: <em>optional</em> The shipping of the variation when the user purchases one</li>
+<li>enabled: <em>optional</em> True if the variation is for sale, False if you need to halt sales.</li>
+<li>size: <em>optional</em> The size of the variation. Example: Large, Medium, Small, 5, 6, 7.5</li>
+<li>color: <em>optional</em> The color of the variation. Example: red, blue, green</li>
+<li>msrp: <em>optional</em> Manufacturer’s Suggested Retail Price.</li>
+<li>shipping_time: <em>optional</em> The amount of time it takes for the shipment to reach the buyer. Please also factor in the time it will take to fulfill and ship the item. Provide a time range in number of days. Lower bound cannot be less than 2 days. Example: 5-10</li>
+<li>main_image: <em>optional</em> URL of a photo for this variant. Provide this when you have different pictures for different variant of the product. If left out, it’ll use the main_image of the productwith the provided parent_sku. Link directly to the image, not the page where it is located. We accept JPEG, PNG or GIF format. Images should be at least 100 x 100 pixels in size.</li>
+</ul>
 
             </div>
             
@@ -758,30 +631,16 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-29">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Enable a Product Variation
-  
-  * <span class="hljs-attribute">sku</span>: The unique identifier <span class="hljs-keyword">for</span> the item you would like to update</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Enable a Product Variation</p>
+<ul>
+<li>sku: The unique identifier for the item you would like to update</li>
+</ul>
 
             </div>
             
@@ -797,30 +656,16 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-31">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Disable a Product Variation
-  
-  * <span class="hljs-attribute">sku</span>: The unique identifier <span class="hljs-keyword">for</span> the item you would like to update</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Disable a Product Variation</p>
+<ul>
+<li>sku: The unique identifier for the item you would like to update</li>
+</ul>
 
             </div>
             
@@ -836,31 +681,26 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-33">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <h2 id="order">Order</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  Order
-  ---------
-  
-  Retrieves the details <span class="hljs-keyword">of</span> an existing order.</pre></div></div>
             
         </li>
         
         
-        <li id="section-34">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <p>Retrieves the details of an existing order.</p>
 
             </div>
             
@@ -876,32 +716,18 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-35">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Retrieve Recently Changed Orders
-  
-  * <span class="hljs-attribute">start</span>: optional An offset into the list <span class="hljs-keyword">of</span> returned items. Use <span class="hljs-number">0</span> to start at the beginning. The API will <span class="hljs-keyword">return</span> the requested number <span class="hljs-keyword">of</span> items starting at <span class="hljs-keyword">this</span> offset. Default to <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> supplied
-  * <span class="hljs-attribute">limit</span>: optionalA limit <span class="hljs-literal">on</span> the number <span class="hljs-keyword">of</span> products that can be returned. Limit can range from <span class="hljs-number">1</span> to <span class="hljs-number">500</span> items <span class="hljs-keyword">and</span> the <span class="hljs-reserved">default</span> <span class="hljs-keyword">is</span> <span class="hljs-number">50</span>
-  * <span class="hljs-attribute">since</span>: optional Collect all the orders that have been updated since the time value passed into <span class="hljs-keyword">this</span> parameter. Fetches from beginning <span class="hljs-keyword">of</span> time <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> specified. We accept <span class="hljs-number">2</span> formats, one <span class="hljs-reserved">with</span> precision down to day <span class="hljs-keyword">and</span> one <span class="hljs-reserved">with</span> precision down to seconds. <span class="hljs-attribute">Example</span>: Jan <span class="hljs-number">20</span>th, <span class="hljs-number">2014</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2014</span>-<span class="hljs-number">01</span>-<span class="hljs-number">20</span>, Jan <span class="hljs-number">20</span>th, <span class="hljs-number">2014</span> <span class="hljs-number">20</span>:<span class="hljs-number">10</span>:<span class="hljs-number">20</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2014</span>-<span class="hljs-number">01</span>-<span class="hljs-number">20</span><span class="hljs-attribute">T20</span>:<span class="hljs-number">10</span>:<span class="hljs-number">20.</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Retrieve Recently Changed Orders</p>
+<ul>
+<li>start: <em>optional</em> An offset into the list of returned items. Use 0 to start at the beginning. The API will return the requested number of items starting at this offset. Default to 0 if not supplied</li>
+<li>limit: <em>optional</em> A limit on the number of products that can be returned. Limit can range from 1 to 500 items and the default is 50</li>
+<li>since: <em>optional</em> Collect all the orders that have been updated since the time value passed into this parameter. Fetches from beginning of time if not specified. We accept 2 formats, one with precision down to day and one with precision down to seconds. Example: <code>Jan 20th, 2014</code> is <code>2014-01-20</code>, <code>Jan 20th, 2014 20:10:20</code> is <code>2014-01-20T20:10:20</code>.</li>
+</ul>
 
             </div>
             
@@ -920,32 +746,18 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-37">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Retrieve Unfulfilled Orders
-  
-  * <span class="hljs-attribute">start</span>: optional An offset into the list <span class="hljs-keyword">of</span> returned items. Use <span class="hljs-number">0</span> to start at the beginning. The API will <span class="hljs-keyword">return</span> the requested number <span class="hljs-keyword">of</span> items starting at <span class="hljs-keyword">this</span> offset. Default to <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> supplied
-  * <span class="hljs-attribute">limit</span>: optionalA limit <span class="hljs-literal">on</span> the number <span class="hljs-keyword">of</span> products that can be returned. Limit can range from <span class="hljs-number">1</span> to <span class="hljs-number">500</span> items <span class="hljs-keyword">and</span> the <span class="hljs-reserved">default</span> <span class="hljs-keyword">is</span> <span class="hljs-number">50</span>
-  * <span class="hljs-attribute">since</span>: optional Collect all the orders that have been updated since the time value passed into <span class="hljs-keyword">this</span> parameter. Fetches from beginning <span class="hljs-keyword">of</span> time <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> specified. We accept <span class="hljs-number">2</span> formats, one <span class="hljs-reserved">with</span> precision down to day <span class="hljs-keyword">and</span> one <span class="hljs-reserved">with</span> precision down to seconds. <span class="hljs-attribute">Example</span>: Jan <span class="hljs-number">20</span>th, <span class="hljs-number">2014</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2014</span>-<span class="hljs-number">01</span>-<span class="hljs-number">20</span>, Jan <span class="hljs-number">20</span>th, <span class="hljs-number">2014</span> <span class="hljs-number">20</span>:<span class="hljs-number">10</span>:<span class="hljs-number">20</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2014</span>-<span class="hljs-number">01</span>-<span class="hljs-number">20</span><span class="hljs-attribute">T20</span>:<span class="hljs-number">10</span>:<span class="hljs-number">20.</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Retrieve Unfulfilled Orders</p>
+<ul>
+<li>start: <em>optional</em> An offset into the list of returned items. Use 0 to start at the beginning. The API will return the requested number of items starting at this offset. Default to 0 if not supplied</li>
+<li>limit: <em>optional</em> A limit on the number of products that can be returned. Limit can range from 1 to 500 items and the default is 50</li>
+<li>since: <em>optional</em> Collect all the orders that have been updated since the time value passed into this parameter. Fetches from beginning of time if not specified. We accept 2 formats, one with precision down to day and one with precision down to seconds. Example: <code>Jan 20th, 2014</code> is <code>2014-01-20</code>, <code>Jan 20th, 2014 20:10:20</code> is <code>2014-01-20T20:10:20</code>.</li>
+</ul>
 
             </div>
             
@@ -964,34 +776,19 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-39">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Fulfill an order
-  
-  * <span class="hljs-attribute">id</span>: Wish<span class="hljs-string">'s unique identifier for the order, or '</span>order_id<span class="hljs-string">' in the Order object
-  * tracking_provider: The carrier that will be shipping your package to its destination
-  * tracking_number: optional The unique identifier that your carrier provided so that the user can track their package as it is being delivered. Tracking number should only contain alphanumeric characters with no space between them.
-  * ship_note: optional A note to the user when you marked the order as shipped
-</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Fulfill an order</p>
+<ul>
+<li>id: Wish’s unique identifier for the order, or ‘order_id’ in the Order object</li>
+<li>tracking_provider: The carrier that will be shipping your package to its destination</li>
+<li>tracking_number: <em>optional</em> The unique identifier that your carrier provided so that the user can track their package as it is being delivered. Tracking number should only contain alphanumeric characters with no space between them.</li>
+<li>ship_note: <em>optional</em> A note to the user when you marked the order as shipped</li>
+</ul>
 
             </div>
             
@@ -1007,43 +804,29 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-41">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Refund/Cancel an order
-  
-  * <span class="hljs-attribute">id</span>: Wish<span class="hljs-string">'s unique identifier for the order, or '</span>order_id<span class="hljs-string">' in the Order object
-  * reason_code: An integer representing the reason for the refund. Check the table between for accepted reason codes
-  * reason_note: optional A note to the user explaining reason for the refund. This field is required if reason_code is -1(Other)
-  
-  Refund Reason Codes
-  0 No More Inventory
-  1 Unable to Ship
-  2 Customer Requested Refund
-  3 Item Damaged
-  7 Received Wrong Item
-  8 Item does not Fit
-  9 Arrived Late or Missing
-  -1 Other, if none of the reasons above apply. reason_note is required if this is used as reason_code
-</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Refund/Cancel an order</p>
+<ul>
+<li>id: Wish’s unique identifier for the order, or ‘order_id’ in the Order object</li>
+<li>reason_code: An integer representing the reason for the refund. Check the table between for accepted reason codes</li>
+<li>reason_note: <em>optional</em> A note to the user explaining reason for the refund. This field is required if reason_code is -1(Other)</li>
+</ul>
+<p>Refund Reason Codes</p>
+<ul>
+<li>0 No More Inventory</li>
+<li>1 Unable to Ship</li>
+<li>2 Customer Requested Refund</li>
+<li>3 Item Damaged</li>
+<li>7 Received Wrong Item</li>
+<li>8 Item does not Fit</li>
+<li>9 Arrived Late or Missing</li>
+<li>-1 Other, if none of the reasons above apply. reason_note is required if this is used asreason_code</li>
+</ul>
 
             </div>
             
@@ -1062,34 +845,19 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
         </li>
         
         
-        <li id="section-43">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Modify Tracking <span class="hljs-keyword">of</span> a Shipped Order
-  
-  * <span class="hljs-attribute">id</span>: Wish<span class="hljs-string">'s unique identifier for the order, or '</span>order_id<span class="hljs-string">' in the Order object
-  * tracking_provider: The carrier that will be shipping your package to its destination
-  * tracking_number: optional The unique identifier that your carrier provided so that the user can track their package as it is being delivered. Tracking number should only contain alphanumeric characters with no space between them.
-  * ship_note: optional A note to the user when you marked the order as shipped
-</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <h1 id="-">#</h1>
+              <p>Modify Tracking of a Shipped Order</p>
+<ul>
+<li>id: Wish’s unique identifier for the order, or ‘order_id’ in the Order object</li>
+<li>tracking_provider: The carrier that will be shipping your package to its destination</li>
+<li>tracking_number: <em>optional</em> The unique identifier that your carrier provided so that the user can track their package as it is being delivered. Tracking number should only contain alphanumeric characters with no space between them.</li>
+<li>ship_note: <em>optional</em> A note to the user when you marked the order as shipped</li>
+</ul>
 
             </div>
             

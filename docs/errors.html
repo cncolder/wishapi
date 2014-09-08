@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>errors.coffee</title>
+  <title>Some Errors</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -11,44 +11,7 @@
   <div id="container">
     <div id="background"></div>
     
-      <ul id="jump_to">
-        <li>
-          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
-          <a class="small" href="javascript:void(0);">+</a>
-          <div id="jump_wrapper">
-          <div id="jump_page">
-            
-              
-              <a class="source" href="debug.html">
-                debug.coffee
-              </a>
-            
-              
-              <a class="source" href="errors.html">
-                errors.coffee
-              </a>
-            
-              
-              <a class="source" href="index.html">
-                index.coffee
-              </a>
-            
-              
-              <a class="source" href="merchant.html">
-                merchant.coffee
-              </a>
-            
-          </div>
-        </li>
-      </ul>
-    
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>errors.coffee</h1>
-              </div>
-          </li>
         
         
         
@@ -58,55 +21,169 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="some-errors">Some Errors</h1>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>errors = <span class="hljs-built_in">require</span> <span class="hljs-string">'errors'</span>
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>The bluebird Promise can catch error by the error type.
+So we define some special error here.</p>
+<pre><code class="lang-coffee">api.variant <span class="hljs-attribute">sku</span>: <span class="hljs-string">'0'</span>
+.<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">(v)</span> -&gt;</span>
+  <span class="hljs-built_in">console</span>.log v.price
+.<span class="hljs-keyword">catch</span> <span class="hljs-function"><span class="hljs-params">(NotFoundError, err)</span> -&gt;</span>
+  <span class="hljs-built_in">console</span>.error <span class="hljs-string">'are you sure you provide a right sku?'</span>
+.<span class="hljs-keyword">catch</span> <span class="hljs-function"><span class="hljs-params">(AuthError, err)</span> -&gt;</span>
+  <span class="hljs-built_in">console</span>.error <span class="hljs-string">'oh! we need key!'</span>
+.<span class="hljs-keyword">catch</span> <span class="hljs-function"><span class="hljs-params">(Http500Error, err)</span> -&gt;</span>
+  <span class="hljs-built_in">console</span>.error <span class="hljs-string">'wish tired.'</span>
+</code></pre>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports = errors = <span class="hljs-built_in">require</span> <span class="hljs-string">'errors'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p><strong>ParamInvalidError</strong></p>
+<p>Raise when you provide some invalid param. eg. get order id ‘0’.</p>
+<p>Wish is only check a little param. product id ‘0’ will return not found error.</p>
 
-errors.create
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>errors.create
   <span class="hljs-attribute">name</span>: <span class="hljs-string">'ParamInvalidError'</span>
-  <span class="hljs-attribute">code</span>: <span class="hljs-number">1000</span>
-  
-errors.create
+  <span class="hljs-attribute">code</span>: <span class="hljs-number">1000</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p><strong>ParamMissingError</strong></p>
+<p>Raise when you missing some <em>must provide</em> param. eg. missing api key.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>errors.create
   <span class="hljs-attribute">name</span>: <span class="hljs-string">'ParamMissingError'</span>
   <span class="hljs-attribute">defaultMessage</span>: <span class="hljs-string">'Required Param Missing'</span>
-  <span class="hljs-attribute">code</span>: <span class="hljs-number">1001</span>
+  <span class="hljs-attribute">code</span>: <span class="hljs-number">1001</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p><strong>NotFoundError</strong></p>
+<p>Raise when you query some model but there is not that model. eg. wrong product id.</p>
 
-errors.create
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>errors.create
   <span class="hljs-attribute">name</span>: <span class="hljs-string">'NotFoundError'</span>
-  <span class="hljs-attribute">code</span>: <span class="hljs-number">1004</span>
+  <span class="hljs-attribute">code</span>: <span class="hljs-number">1004</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p><strong>AuthError</strong></p>
+<p>Raise when you provide a wrong api key.</p>
 
-errors.create
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>errors.create
   <span class="hljs-attribute">name</span>: <span class="hljs-string">'AuthError'</span>
   <span class="hljs-attribute">defaultMessage</span>: <span class="hljs-string">'Unauthorized Request'</span>
-  <span class="hljs-attribute">code</span>: <span class="hljs-number">4000</span>
+  <span class="hljs-attribute">code</span>: <span class="hljs-number">4000</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p><strong>ServerError</strong></p>
+<p>Raise when wish down or return a mistake format data for us. eg. html page.</p>
 
-errors.create
-  <span class="hljs-attribute">name</span>: <span class="hljs-string">'WishError'</span>
-  <span class="hljs-attribute">code</span>: <span class="hljs-number">4001</span>
-
-errors.create
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>errors.create
   <span class="hljs-attribute">name</span>: <span class="hljs-string">'ServerError'</span>
   <span class="hljs-attribute">defaultMessage</span>: <span class="hljs-string">'Server Return Unknown Contest.'</span>
   <span class="hljs-attribute">defaultExplanation</span>: <span class="hljs-string">'Maybe server is maintaining.'</span>
-  <span class="hljs-attribute">code</span>: <span class="hljs-number">911</span>
+  <span class="hljs-attribute">code</span>: <span class="hljs-number">911</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Find and return special wish error by code.</p>
 
-errors.w<span class="hljs-function"><span class="hljs-title">ish</span> = <span class="hljs-params">(body)</span> -&gt;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>errors.w<span class="hljs-function"><span class="hljs-title">ish</span> = <span class="hljs-params">(body)</span> -&gt;</span>
   { code } = body
   FoundError = errors.find code
   
   <span class="hljs-keyword">delete</span> body.code
   
-  <span class="hljs-keyword">new</span> FoundError body
+  <span class="hljs-keyword">new</span> FoundError body</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Find and return special http error by status code.</p>
 
-errors.h<span class="hljs-function"><span class="hljs-title">ttp</span> = <span class="hljs-params">(code)</span> -&gt;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>errors.h<span class="hljs-function"><span class="hljs-title">ttp</span> = <span class="hljs-params">(code)</span> -&gt;</span>
   HttpError = errors.find code
   
-  <span class="hljs-keyword">new</span> HttpError
-
-
-<span class="hljs-built_in">module</span>.exports = errors</pre></div></div>
+  <span class="hljs-keyword">new</span> HttpError</pre></div></div>
             
         </li>
         
