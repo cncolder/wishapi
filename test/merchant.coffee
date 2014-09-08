@@ -126,7 +126,7 @@ describe 'Merchant', ->
   
   describe 'authTest', ->
     describe 'without key', ->
-      it 'should reject ParamError', ->
+      it 'should reject ParamMissingError', ->
         merchant = new Merchant sandbox: true
         assert.isRejected merchant.authTest(), errors.ParamMissingError
     
