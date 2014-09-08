@@ -37,7 +37,7 @@ merchant.product('a product id')
 Don't favor promise?
 --------------------
 
-Thanks [bluebird](bluebird/https://github.com/petkaantonov/bluebird). We provide callback too.
+Thanks [bluebird](https://github.com/petkaantonov/bluebird). We provide callback too.
 
 ```javascript
 merchant.fulfillOrder({
