@@ -11,7 +11,7 @@ gulp.task 'default', [ 'watch' ]
 gulp.task 'build', [ 'clean', 'coffee' ]
 
 gulp.task 'watch', ->
-  gulp.watch 'src/**/*.coffee', [ 'coffee' ]
+  gulp.watch 'src/**/*.coffee', [ 'coffee', 'mocha' ]
   gulp.watch 'test/**/*.coffee', [ 'mocha' ]
 
 gulp.task 'clean', (cb) ->
@@ -26,8 +26,7 @@ gulp.task 'coffee', ->
 gulp.task 'mocha', ->
   gulp
     .src 'test/**/*.coffee'
-    .pipe cache 'mocha'
+    # .pipe cache 'mocha'
     .pipe mocha
-      # compilers: 'coffee:coffee-script/register'
-      reporter: 'dot'
-      timeout:  '20s'
+      reporter: 'min'
+      # timeout:  '20s'

@@ -2,8 +2,16 @@ errors = require 'errors'
 
 
 errors.create
-  name: 'KeyError'
-  defaultMessage: 'Required Param key Missing'
+  name: 'InvalidIdError'
+  code: 1000
+  
+errors.create
+  name: 'NotFoundError'
+  code: 1004
+
+errors.create
+  name: 'ParamError'
+  defaultMessage: 'Required Param Missing'
   code: 1001
 
 errors.create
