@@ -111,6 +111,26 @@ describe 'Merchant', ->
         assert.instanceOf flat.last_updated, Date
         assert.instanceOf flat.order_time, Date
         assert.equal flat.order_time.getUTCHours(), 20
+      
+      it 'should extrace ShipingDetail', ->
+        flat = merchant.format
+          Order:
+            ShippingDetail:
+              city: 'North Bay'
+              country: 'US'
+              name: 'Mick Berry'
+              phone_number: '+1 555-181-7247'
+              state: 'NC'
+              street_address1: '2126 PO Box 5 Rt 49'
+              zipcode: '13123'
+        assert.equal flat.city, 'North Bay'
+        assert.equal flat.country, 'US'
+        assert.equal flat.name, 'Mick Berry'
+        assert.equal flat.phone_number, '+1 555-181-7247'
+        assert.equal flat.state, 'NC'
+        assert.equal flat.street_address1, '2126 PO Box 5 Rt 49'
+        assert.equal flat.zipcode, '13123'
+        assert.isUndefined flat.ShippingDetail
     
     describe 'array', ->
       it 'should flatten', ->
