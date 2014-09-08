@@ -22,67 +22,99 @@ describe 'Merchant', ->
   describe 'format', ->
     merchant = new Merchant sandbox: true
     
-    it 'should extract tags', ->
-      flat = merchant.format tags: [ Tag: id: 'jimmy' ]
-      assert.deepEqual flat, tags: [ id: 'jimmy' ]
+    describe 'tags', ->
+      it 'should extract tags', ->
+        flat = merchant.format tags: [ Tag: id: 'jimmy' ]
+        assert.deepEqual flat, tags: [ id: 'jimmy' ]
     
-    it 'should extract auto_tags', ->
-      flat = merchant.format auto_tags: [ Tag: id: 'jimmy' ]
-      assert.deepEqual flat, auto_tags: [ id: 'jimmy' ]
+      it 'should extract auto_tags', ->
+        flat = merchant.format auto_tags: [ Tag: id: 'jimmy' ]
+        assert.deepEqual flat, auto_tags: [ id: 'jimmy' ]
     
-    it 'should extract variants', ->
-      flat = merchant.format variants: [ Variant: id: '1' ]
-      assert.deepEqual flat, variants: [ id: '1' ]
+    describe 'product', ->
+      it 'should extract Product', ->
+        flat = merchant.format Product: id: 1
+        assert.deepEqual flat, id: 1
     
-    it 'should extract Product', ->
-      flat = merchant.format Product: id: 1
-      assert.deepEqual flat, id: 1
+      it 'should adjust is_promoted to bool', ->
+        flat = merchant.format Product: is_promoted: 'True'
+        assert.strictEqual flat.is_promoted, true
+        flat = merchant.format Product: is_promoted: 'False'
+        assert.strictEqual flat.is_promoted, false
     
-    it 'should adjust is_promoted to bool', ->
-      flat = merchant.format Product: is_promoted: 'True'
-      assert.strictEqual flat.is_promoted, true
-      flat = merchant.format Product: is_promoted: 'False'
-      assert.strictEqual flat.is_promoted, false
+      it 'should cast number', ->
+        flat = merchant.format Product:
+          number_saves: '10'
+          number_sold: '2'
+        assert.strictEqual flat.number_saves, 10
+        assert.strictEqual flat.number_sold, 2
     
-    it 'should cast number', ->
-      flat = merchant.format Product: number_saves: '1'
-      assert.strictEqual flat.number_saves, 1
-      flat = merchant.format Product: number_sold: '1'
-      assert.strictEqual flat.number_sold, 1
+    describe 'variants', ->
+      it 'should flatten', ->
+        flat = merchant.format variants: [ Variant: id: '1' ]
+        assert.deepEqual flat, variants: [ id: '1' ]
     
-    it 'should extract Variant', ->
-      flat = merchant.format Variant: id: 1
-      assert.deepEqual flat, id: 1
+      it 'should extract Variant', ->
+        flat = merchant.format Variant: id: 1
+        assert.deepEqual flat, id: 1
     
-    it 'should adjust enabled to bool', ->
-      flat = merchant.format Variant: enabled: 'True'
-      assert.strictEqual flat.enabled, true
-      flat = merchant.format Variant: enabled: 'False'
-      assert.strictEqual flat.enabled, false
+      it 'should adjust enabled to bool', ->
+        flat = merchant.format Variant: enabled: 'True'
+        assert.strictEqual flat.enabled, true
+        flat = merchant.format Variant: enabled: 'False'
+        assert.strictEqual flat.enabled, false
     
-    it 'should cast price', ->
-      flat = merchant.format Variant: msrp: '50'
-      assert.strictEqual flat.msrp, 50
-      flat = merchant.format Variant: inventory: '100'
-      assert.strictEqual flat.inventory, 100
-      flat = merchant.format Variant: price: '20'
-      assert.strictEqual flat.price, 20
-      flat = merchant.format Variant: shipping: '5'
-      assert.strictEqual flat.shipping, 5
+      it 'should cast price', ->
+        flat = merchant.format Variant:
+          msrp: '50'
+          inventory: '100'
+          price: '20'
+          shipping: '5'
+        assert.strictEqual flat.msrp, 50
+        assert.strictEqual flat.inventory, 100
+        assert.strictEqual flat.price, 20
+        assert.strictEqual flat.shipping, 5
     
-    it 'should extract Order', ->
-      flat = merchant.format Order: id: 1
-      assert.deepEqual flat, id: 1
+    describe 'order', ->
+      it 'should extract Order', ->
+        flat = merchant.format Order: id: 1
+        assert.deepEqual flat, id: 1
     
-    it 'should extract item in array', ->
-      flat = merchant.format [
-        { Product: id: 1 }
-        { Product: id: 2 }
-      ]
-      assert.deepEqual flat, [
-        { id: 1 }
-        { id: 2 }
-      ]
+      it 'should cast quantity price and shipping', ->
+        flat = merchant.format Order:
+          order_total: '50'
+          quantity: '1'
+          price: '100.9'
+          cost: '99'
+          shipping: '5'
+          shipping_cost: '6'
+          days_to_fulfill: '7'
+        assert.strictEqual flat.order_total, 50
+        assert.strictEqual flat.quantity, 1
+        assert.strictEqual flat.price, 100.9
+        assert.strictEqual flat.cost, 99
+        assert.strictEqual flat.shipping, 5
+        assert.strictEqual flat.shipping_cost, 6
+        assert.strictEqual flat.days_to_fulfill, 7
+    
+      it 'should cast date', ->
+        flat = merchant.format Order:
+          last_updated: '2013-12-06T20:20:20'
+          order_time: '2013-12-06T20:20:20'
+        assert.instanceOf flat.last_updated, Date
+        assert.instanceOf flat.order_time, Date
+        assert.equal flat.order_time.getUTCHours(), 20
+    
+    describe 'array', ->
+      it 'should flatten', ->
+        flat = merchant.format [
+          { Product: id: 1 }
+          { Product: id: 2 }
+        ]
+        assert.deepEqual flat, [
+          { id: 1 }
+          { id: 2 }
+        ]
   
   describe 'authTest', ->
     describe 'without key', ->
