@@ -62,6 +62,16 @@ About Merchant class you can read [an annotated source][merchant-doc]. It write 
 
 This api return some wish special error type. You can find them at [errors annotated source][errors-doc].
 
+Issue
+-----
+
+Our code have pass [100% test converage][coverage] currently.
+
+If you find out any issues. Please [let me know][issues].
+
+If you have any good idea. Send me a pull request.
+
+
 [travis-url]: https://travis-ci.org/cncolder/wishapi
 [travis-image]: https://travis-ci.org/cncolder/wishapi.svg?branch=master
 
@@ -75,3 +85,6 @@ This api return some wish special error type. You can find them at [errors annot
 [official-doc]: https://merchant.wish.com/documentation/api
 [merchant-doc]: https://cncolder.github.io/wishapi/docs/merchant.html
 [errors-doc]: https://cncolder.github.io/wishapi/docs/errors.html
+[coverage]: https://cncolder.github.io/wishapi/docs/coverage.html
+
+[issues]: https://github.com/cncolder/wishapi/issues

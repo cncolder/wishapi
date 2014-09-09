@@ -35,7 +35,8 @@ module.exports = class Merchant
   # var api = new Merchant({key: 'your api key here'});
   # ```
   # - - -
-  constructor: ({ @key, @sandbox, @timeout }) ->
+  constructor: (options) ->
+    { @key, @sandbox, @timeout } = options or {}
     @sandbox ?= false
     @timeout ?= 20 * 1000
 
@@ -147,10 +148,6 @@ module.exports = class Merchant
   # Handle request. catch error.
   handle: (promise) ->
     promise
-      .catch ([ res, body ]) ->
-        debug 'HTTP Status', res?.statusCode
-      
-        throw errors.http res?.statusCode or 500
       .then ([ res, body ]) ->
         debug body
       
@@ -161,7 +158,7 @@ module.exports = class Merchant
         else if code
           throw errors.wish body
         else
-          throw errors.ServerError response: body
+          throw new errors.ServerError response: body
   
   # Request GET.
   get: (path, query = {}) ->

@@ -13,10 +13,20 @@ describe 'Merchant', ->
       console.error "pending mocks:\n  #{pendingMocks}"
   
   
-  it 'should run in sandbox when test', ->
-    merchant = new Merchant sandbox: true
-    assert.equal merchant.baseUrl, 'https://sandbox.merchant.wish.com/api/v1'
+  describe 'sandbox', ->
+    it 'should run in sandbox when test', ->
+      merchant = new Merchant sandbox: true
+      assert.equal merchant.baseUrl, 'https://sandbox.merchant.wish.com/api/v1'
+    
+    it 'should run with real api address when sandbox off', ->
+      merchant = new Merchant()
+      assert.equal merchant.sandbox, false
+      assert.equal merchant.baseUrl, 'https://merchant.wish.com/api/v1'
   
+  describe 'timeout', ->
+    it 'should has default timeout 20s', ->
+      merchant = new Merchant()
+      assert.equal merchant.timeout, 20 * 1000
   
   describe 'url', ->
     merchant = new Merchant sandbox: true
@@ -32,6 +42,13 @@ describe 'Merchant', ->
   
   describe 'format', ->
     merchant = new Merchant sandbox: true
+    
+    describe 'success', ->
+      it 'should adjust success to bool', ->
+        flat = merchant.format success: 'True'
+        assert.isTrue flat.success
+        flat = merchant.format success: 'False'
+        assert.isFalse flat.success
     
     describe 'tags', ->
       it 'should extract tags', ->
@@ -49,9 +66,9 @@ describe 'Merchant', ->
     
       it 'should adjust is_promoted to bool', ->
         flat = merchant.format Product: is_promoted: 'True'
-        assert.strictEqual flat.is_promoted, true
+        assert.isTrue flat.is_promoted
         flat = merchant.format Product: is_promoted: 'False'
-        assert.strictEqual flat.is_promoted, false
+        assert.isFalse flat.is_promoted
     
       it 'should cast number', ->
         flat = merchant.format Product:
@@ -71,9 +88,9 @@ describe 'Merchant', ->
     
       it 'should adjust enabled to bool', ->
         flat = merchant.format Variant: enabled: 'True'
-        assert.strictEqual flat.enabled, true
+        assert.isTrue flat.enabled
         flat = merchant.format Variant: enabled: 'False'
-        assert.strictEqual flat.enabled, false
+        assert.isFalse flat.enabled
     
       it 'should cast price', ->
         flat = merchant.format Variant:
@@ -148,6 +165,42 @@ describe 'Merchant', ->
         ]
   
   
+  describe 'handle', ->
+    describe 'server error', ->
+      before ->
+        wish
+          .get '/api/v1/auth_test?key=1'
+          .reply 200, nocode: 'wish not give us a code'
+          
+      it 'should reject ServerError', ->
+        merchant = new Merchant
+          sandbox: true
+          key: '1'
+        assert.isRejected merchant.authTest(), errors.ServerError
+    
+    describe 'timeout', ->
+      before ->
+        wish
+          .get '/api/v1/auth_test?key=4'
+          .delayConnection 1000
+          .reply null
+          
+      it 'should catch timeout', ->
+        merchant = new Merchant
+          sandbox: true
+          key: '4'
+          timeout: 1
+        assert.isRejected merchant.authTest(), 'ETIMEDOUT'
+  
+  
+  describe 'post', ->
+    describe 'missing key', ->
+      it 'should reject ParamMissingError', ->
+        merchant = new Merchant sandbox: true
+        promise = merchant.post '/'
+        assert.isRejected promise, errors.ParamMissingError
+  
+  
   describe 'authTest', ->
     describe 'without key', ->
       it 'should reject ParamMissingError', ->
@@ -205,21 +258,27 @@ describe 'Merchant', ->
           assert.isRejected promise, errors.NotFoundError
           
       describe 'with right id', ->
+        merchant = new Merchant
+          sandbox: true
+          key: 'test'
+          
         before ->
           [ status, body ] = fixture.sandbox['product?id=540e1415f570545a0d90f344']
           wish
             .get '/api/v1/product?id=540e1415f570545a0d90f344&key=test'
+            .times 2
             .reply status, body
       
         it 'should get product', ->
-          merchant = new Merchant
-            sandbox: true
-            key: 'test'
           promise = merchant.product '540e1415f570545a0d90f344'
           assert.isFulfilled promise.then (product) ->
             assert.equal product.name, 'Test Product'
             assert.equal product.tags[0].name, 'tag1'
             assert.strictEqual product.variants[0].price, 2
+        
+        it 'should accept hash args', ->
+          promise = merchant.product id: '540e1415f570545a0d90f344'
+          assert.isFulfilled promise
             
     describe 'multi get', ->
       describe 'first two', ->
@@ -236,6 +295,20 @@ describe 'Merchant', ->
           promise = merchant.products 0, 2
           assert.isFulfilled promise.then (products) ->
             assert.lengthOf products, 2
+      
+      describe 'default args is 0, 50', ->
+        before ->
+          [ status, body ] = fixture.sandbox['product/multi-get']
+          wish
+            .get '/api/v1/product/multi-get?start=0&limit=50&key=test'
+            .reply status, body
+      
+        it 'should get 50 products', ->
+          merchant = new Merchant
+            sandbox: true
+            key: 'test'
+          promise = merchant.products()
+          assert.isFulfilled promise
             
     describe 'create', ->
       describe 'missing main image', ->
@@ -456,6 +529,20 @@ describe 'Merchant', ->
             key: 'test'
           promise = merchant.variants 0, 2
           assert.isFulfilled promise
+      
+      describe 'default args is 0, 50', ->
+        before ->
+          [ status, body ] = fixture.sandbox['variant/multi-get']
+          wish
+            .get '/api/v1/variant/multi-get?start=0&limit=50&key=test'
+            .reply status, body
+      
+        it 'should get the variants of 50 products', ->
+          merchant = new Merchant
+            sandbox: true
+            key: 'test'
+          promise = merchant.variants()
+          assert.isFulfilled promise
     
     describe 'create', ->
       form =
@@ -601,6 +688,20 @@ describe 'Merchant', ->
         promise = merchant.orders 0, 2
         assert.isFulfilled promise.then (orders) ->
           assert.lengthOf orders, 2
+      
+      describe 'default args is 0, 50', ->
+        before ->
+          [ status, body ] = fixture.sandbox['order/multi-get']
+          wish
+            .get '/api/v1/order/multi-get?start=0&limit=50&since=&key=test'
+            .reply status, body
+      
+        it 'should get 50 orders', ->
+          merchant = new Merchant
+            sandbox: true
+            key: 'test'
+          promise = merchant.orders()
+          assert.isFulfilled promise
     
     describe 'unfullfiled', ->
       before ->
@@ -615,6 +716,20 @@ describe 'Merchant', ->
           key: 'test'
         promise = merchant.unfullfiledOrders 0, 2
         assert.isFulfilled promise
+      
+      describe 'default args is 0, 50', ->
+        before ->
+          [ status, body ] = fixture.sandbox['order/get-fulfill']
+          wish
+            .get '/api/v1/order/get-fulfill?start=0&limit=50&since=&key=test'
+            .reply status, body
+      
+        it 'should get 50 unfulfill orders', ->
+          merchant = new Merchant
+            sandbox: true
+            key: 'test'
+          promise = merchant.unfullfiledOrders()
+          assert.isFulfilled promise
     
     describe 'fulfill', ->
       before ->
@@ -641,6 +756,7 @@ describe 'Merchant', ->
         wish
           .filteringRequestBody /.*reason_code=0.*/, 'reason0'
           .post '/api/v1/order/refund', 'reason0'
+          .times 2
           .reply status, body
     
       it 'should success', ->
@@ -648,6 +764,16 @@ describe 'Merchant', ->
           sandbox: true
           key: 'test'
         promise = merchant.refundOrder
+          id: '540e1418f570545a1090f34c'
+          reason_code: '0'
+        assert.isFulfilled promise.then (res) ->
+          assert.equal res.success, true
+      
+      it 'should cancel either', ->
+        merchant = new Merchant
+          sandbox: true
+          key: 'test'
+        promise = merchant.cancelOrder
           id: '540e1418f570545a1090f34c'
           reason_code: '0'
         assert.isFulfilled promise.then (res) ->
