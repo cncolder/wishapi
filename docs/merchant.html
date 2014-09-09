@@ -129,7 +129,8 @@ debug = (<span class="hljs-built_in">require</span> <span class="hljs-string">'.
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">({ <span class="hljs-property">@key</span>, <span class="hljs-property">@sandbox</span>, <span class="hljs-property">@timeout</span> })</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">(options)</span> -&gt;</span>
+    { <span class="hljs-property">@key</span>, <span class="hljs-property">@sandbox</span>, <span class="hljs-property">@timeout</span> } = options <span class="hljs-keyword">or</span> {}
     <span class="hljs-property">@sandbox</span> ?= <span class="hljs-literal">false</span>
     <span class="hljs-property">@timeout</span> ?= <span class="hljs-number">20</span> * <span class="hljs-number">1000</span>
 
@@ -275,12 +276,8 @@ After
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">handle</span>: <span class="hljs-function"><span class="hljs-params">(promise)</span> -&gt;</span>
     promise
-      .<span class="hljs-keyword">catch</span> <span class="hljs-function"><span class="hljs-params">([ res, body ])</span> -&gt;</span>
-        debug <span class="hljs-string">'HTTP Status'</span>, res.statusCode
-      
-        <span class="hljs-keyword">throw</span> errors.http res.statusCode
       .<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-params">([ res, body ])</span> -&gt;</span>
-        debug body.code, body.message
+        debug body
       
         { code } = body
       
@@ -289,7 +286,7 @@ After
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> code
           <span class="hljs-keyword">throw</span> errors.wish body
         <span class="hljs-keyword">else</span>
-          <span class="hljs-keyword">throw</span> errors.ServerError <span class="hljs-attribute">response</span>: body</pre></div></div>
+          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> errors.ServerError <span class="hljs-attribute">response</span>: body</pre></div></div>
             
         </li>
         
@@ -658,6 +655,13 @@ After
               </div>
               <p><code>variants( [start], [limit], [callback] )</code></p>
 <p>List all Product Variations</p>
+<p>Be careful: The limit is product count limit. Not variants limit.</p>
+<p>Arguments</p>
+<ol>
+<li>start: <em>optional</em> An offset into the list of returned items. Use 0 to start at the beginning. The API will return the requested number of items starting at this offset. Default to 0 if not supplied</li>
+<li>limit: A limit on the number of products that can be returned. Limit can range from 1 to 500 items and the default is 50</li>
+<li>callback: err, variants</li>
+</ol>
 <hr>
 
             </div>
