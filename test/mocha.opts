@@ -1,2 +1,2 @@
 --compilers coffee:coffee-script/register
---require blanket
+--timeout 30000

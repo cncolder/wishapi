@@ -1,0 +1,774 @@
+{
+    "sandbox": {
+        "apikey": "JHBia2RmMiQxMDAkWmN6NXZ6Y0dZR3hOQ2FFMHhuaHZ6USQxNk5xcjAxRUlvY00vLkFNdjBsSHhkT1liMlU=",
+        "auth_test": [
+            200,
+            {
+                "code": 0,
+                "data": {
+                    "success": true
+                },
+                "message": ""
+            }
+        ],
+        "auth_test?key=0": [
+            401,
+            {
+                "code": 4000,
+                "data": {},
+                "message": "Unauthorized Request"
+            }
+        ],
+        "order/fulfill-one": [
+            200,
+            {
+                "code": 0,
+                "data": {
+                    "success": true
+                },
+                "message": "Your order is being processed right now!"
+            }
+        ],
+        "order/get-fulfill": [
+            200,
+            {
+                "code": 0,
+                "data": [
+                    {
+                        "Order": {
+                            "ShippingDetail": {
+                                "city": "test sf",
+                                "country": "test us",
+                                "name": "test name",
+                                "phone_number": "1231241",
+                                "state": "test cali",
+                                "street_address1": "13 calif st",
+                                "street_address2": "2nd",
+                                "zipcode": "12345"
+                            },
+                            "color": "frenchlilac",
+                            "cost": "4.0",
+                            "days_to_fulfill": "6",
+                            "last_updated": "2014-09-07T20:39:52",
+                            "order_id": "540e1418f570545a1090f34a",
+                            "order_time": "2014-09-08T20:39:52",
+                            "order_total": "5.0",
+                            "price": "4.70588235294",
+                            "product_id": "540e1415f570545a0d90f344",
+                            "product_image_url": "http://s3-us-west-1.amazonaws.com/sweeper-sandbox-contestimage/540e1415f570545a0d90f344-normal.jpg",
+                            "product_name": "Test Product",
+                            "quantity": "1",
+                            "shipping": "1.0",
+                            "shipping_cost": "1.0",
+                            "size": "1",
+                            "sku": "sku 1",
+                            "state": "APPROVED",
+                            "transaction_id": "540e1418f570545a1090f349",
+                            "variant_id": "540e1417f570545a0d90f346"
+                        }
+                    },
+                    {
+                        "Order": {
+                            "ShippingDetail": {
+                                "city": "test sf",
+                                "country": "test us",
+                                "name": "test name",
+                                "phone_number": "1231241",
+                                "state": "test cali",
+                                "street_address1": "13 calif st",
+                                "street_address2": "2nd",
+                                "zipcode": "12345"
+                            },
+                            "color": "frenchlilac",
+                            "cost": "4.0",
+                            "days_to_fulfill": "6",
+                            "last_updated": "2014-09-07T20:39:52",
+                            "order_id": "540e1418f570545a1090f34c",
+                            "order_time": "2014-09-08T20:39:52",
+                            "order_total": "5.0",
+                            "price": "4.70588235294",
+                            "product_id": "540e1415f570545a0d90f344",
+                            "product_image_url": "http://s3-us-west-1.amazonaws.com/sweeper-sandbox-contestimage/540e1415f570545a0d90f344-normal.jpg",
+                            "product_name": "Test Product",
+                            "quantity": "1",
+                            "shipping": "1.0",
+                            "shipping_cost": "1.0",
+                            "size": "1",
+                            "sku": "sku 1",
+                            "state": "APPROVED",
+                            "transaction_id": "540e1418f570545a1090f34b",
+                            "variant_id": "540e1417f570545a0d90f346"
+                        }
+                    }
+                ],
+                "message": "",
+                "paging": {
+                    "next": "https://sandbox.merchant.wish.com/api/v1/order/get-fulfill?start=2&limit=2&key=JHBia2RmMiQxMDAkWmN6NXZ6Y0dZR3hOQ2FFMHhuaHZ6USQxNk5xcjAxRUlvY00vLkFNdjBsSHhkT1liMlU%3D"
+                }
+            }
+        ],
+        "order/modify-tracking": [
+            200,
+            {
+                "code": 0,
+                "data": {
+                    "success": true
+                },
+                "message": ""
+            }
+        ],
+        "order/multi-get": [
+            200,
+            {
+                "code": 0,
+                "data": [
+                    {
+                        "Order": {
+                            "ShippingDetail": {
+                                "city": "test sf",
+                                "country": "test us",
+                                "name": "test name",
+                                "phone_number": "1231241",
+                                "state": "test cali",
+                                "street_address1": "13 calif st",
+                                "street_address2": "2nd",
+                                "zipcode": "12345"
+                            },
+                            "color": "frenchlilac",
+                            "cost": "4.0",
+                            "last_updated": "2014-09-07T20:39:52",
+                            "order_id": "540e1418f570545a1090f35c",
+                            "order_time": "2014-09-08T20:39:52",
+                            "order_total": "5.0",
+                            "price": "4.70588235294",
+                            "product_id": "540e1415f570545a0d90f344",
+                            "product_image_url": "http://s3-us-west-1.amazonaws.com/sweeper-sandbox-contestimage/540e1415f570545a0d90f344-normal.jpg",
+                            "product_name": "Test Product",
+                            "quantity": "1",
+                            "ship_note": "lalal",
+                            "shipped_date": "2014-09-04",
+                            "shipping": "1.0",
+                            "shipping_cost": "1.0",
+                            "shipping_provider": "FedEx",
+                            "size": "1",
+                            "sku": "sku 1",
+                            "state": "SHIPPED",
+                            "tracking_number": "123123123",
+                            "transaction_id": "540e1418f570545a1090f35b",
+                            "variant_id": "540e1417f570545a0d90f346"
+                        }
+                    },
+                    {
+                        "Order": {
+                            "ShippingDetail": {
+                                "city": "test sf",
+                                "country": "test us",
+                                "name": "test name",
+                                "phone_number": "1231241",
+                                "state": "test cali",
+                                "street_address1": "13 calif st",
+                                "street_address2": "2nd",
+                                "zipcode": "12345"
+                            },
+                            "color": "frenchlilac",
+                            "cost": "4.0",
+                            "last_updated": "2014-09-07T20:39:52",
+                            "order_id": "540e1418f570545a1090f35a",
+                            "order_time": "2014-09-08T20:39:52",
+                            "order_total": "5.0",
+                            "price": "4.70588235294",
+                            "product_id": "540e1415f570545a0d90f344",
+                            "product_image_url": "http://s3-us-west-1.amazonaws.com/sweeper-sandbox-contestimage/540e1415f570545a0d90f344-normal.jpg",
+                            "product_name": "Test Product",
+                            "quantity": "1",
+                            "ship_note": "lalal",
+                            "shipped_date": "2014-09-04",
+                            "shipping": "1.0",
+                            "shipping_cost": "1.0",
+                            "shipping_provider": "FedEx",
+                            "size": "1",
+                            "sku": "sku 1",
+                            "state": "SHIPPED",
+                            "tracking_number": "123123123",
+                            "transaction_id": "540e1418f570545a1090f359",
+                            "variant_id": "540e1417f570545a0d90f346"
+                        }
+                    }
+                ],
+                "message": "",
+                "paging": {
+                    "next": "https://sandbox.merchant.wish.com/api/v1/order/multi-get?start=2&limit=2&key=JHBia2RmMiQxMDAkWmN6NXZ6Y0dZR3hOQ2FFMHhuaHZ6USQxNk5xcjAxRUlvY00vLkFNdjBsSHhkT1liMlU%3D"
+                }
+            }
+        ],
+        "order/refund": [
+            200,
+            {
+                "code": 0,
+                "data": {
+                    "success": true
+                },
+                "message": ""
+            }
+        ],
+        "order?id=0": [
+            400,
+            {
+                "code": 1000,
+                "data": 2014,
+                "message": "0 is an invalid id"
+            }
+        ],
+        "order?id=123456789009876543210164": [
+            200,
+            {
+                "code": 0,
+                "data": {
+                    "Order": {
+                        "ShippingDetail": {
+                            "city": "North Bay",
+                            "country": "US",
+                            "name": "Mick Berry",
+                            "phone_number": "+1 555-181-7247",
+                            "state": "NC",
+                            "street_address1": "2126 PO Box 5 Rt 49",
+                            "zipcode": "13123"
+                        },
+                        "cost": "6.8",
+                        "days_to_fulfill": "2",
+                        "last_updated": "2013-12-06T20:20:20",
+                        "order_id": "123456789009876543210164",
+                        "order_time": "2013-12-06T20:20:20",
+                        "order_total": "20",
+                        "price": "8",
+                        "product_id": "1113fad43deaf71536cb2c74",
+                        "product_image_url": "http://d1zog42tnv16ho.cloudfront.net/4fea11fac43bf532f4001419-normal.jpg",
+                        "product_name": "Dandelion Necklace",
+                        "quantity": "2",
+                        "shipping": "2.35",
+                        "shipping_cost": "2",
+                        "sku": "Dandelion Necklace",
+                        "state": "APPROVED",
+                        "transaction_id": "11114026a99e980d4e500269",
+                        "variant_id": "1111fad63deaf71536cb2c76"
+                    }
+                },
+                "message": ""
+            }
+        ],
+        "order?id=123456789012345678901234": [
+            400,
+            {
+                "code": 1004,
+                "data": 2021,
+                "message": "No 'Order' Found with id: '123456789012345678901234'"
+            }
+        ],
+        "product/add": [
+            200,
+            {
+                "code": 0,
+                "data": {
+                    "Product": {
+                        "auto_tags": [],
+                        "brand": "Wish",
+                        "description": "A bottle",
+                        "id": "540ec40196a5c711f7c358b7",
+                        "is_promoted": "False",
+                        "name": "Bottle",
+                        "number_saves": "0",
+                        "number_sold": "0",
+                        "parent_sku": "Bottle-1",
+                        "tags": [
+                            {
+                                "Tag": {
+                                    "id": "glas",
+                                    "name": "Glass"
+                                }
+                            },
+                            {
+                                "Tag": {
+                                    "id": "bottle",
+                                    "name": "Bottle"
+                                }
+                            }
+                        ],
+                        "variants": [
+                            {
+                                "Variant": {
+                                    "enabled": "True",
+                                    "id": "540ec40196a5c711f7c358b9",
+                                    "inventory": "100",
+                                    "msrp": "80.0",
+                                    "price": "50.0",
+                                    "shipping": "5.0",
+                                    "shipping_time": "7-14",
+                                    "sku": "Bottle-1"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "message": ""
+            }
+        ],
+        "product/add# cannot get image": [
+            400,
+            {
+                "code": 1000,
+                "data": 2213,
+                "message": "Cannot get image from URL http://www.example.com/1.jpg"
+            }
+        ],
+        "product/add# missing main image": [
+            400,
+            {
+                "code": 1000,
+                "data": 2202,
+                "message": "Required column Main Image URL is missing."
+            }
+        ],
+        "product/disable": [
+            200,
+            {
+                "code": 0,
+                "data": null,
+                "message": ""
+            }
+        ],
+        "product/enable": [
+            200,
+            {
+                "code": 0,
+                "data": null,
+                "message": ""
+            }
+        ],
+        "product/multi-get": [
+            200,
+            {
+                "code": 0,
+                "data": [
+                    {
+                        "Product": {
+                            "auto_tags": [],
+                            "brand": "1",
+                            "description": "Product description",
+                            "id": "540e1415f570545a0d90f344",
+                            "is_promoted": "False",
+                            "landing_page_url": "http://www.lalala.com/1",
+                            "name": "Test Product",
+                            "number_saves": "0",
+                            "number_sold": "0",
+                            "parent_sku": "parent_sku 1",
+                            "tags": [
+                                {
+                                    "Tag": {
+                                        "id": "tag1",
+                                        "name": "tag1"
+                                    }
+                                },
+                                {
+                                    "Tag": {
+                                        "id": "tag2",
+                                        "name": "tag2"
+                                    }
+                                },
+                                {
+                                    "Tag": {
+                                        "id": "tags3",
+                                        "name": "tags3"
+                                    }
+                                }
+                            ],
+                            "upc": "000000000001",
+                            "variants": [
+                                {
+                                    "Variant": {
+                                        "color": "frenchlilac",
+                                        "enabled": "True",
+                                        "id": "540e1417f570545a0d90f346",
+                                        "inventory": "20",
+                                        "msrp": "6.0",
+                                        "price": "2.0",
+                                        "shipping": "2.0",
+                                        "shipping_time": "5-17",
+                                        "size": "1",
+                                        "sku": "sku 1"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "Product": {
+                            "auto_tags": [],
+                            "brand": "Wish",
+                            "description": "Wish.com",
+                            "id": "540ebfdd96a5c711f8c358b5",
+                            "is_promoted": "False",
+                            "name": "Wish",
+                            "number_saves": "0",
+                            "number_sold": "0",
+                            "parent_sku": "Wish",
+                            "tags": [
+                                {
+                                    "Tag": {
+                                        "id": "website",
+                                        "name": "Website"
+                                    }
+                                },
+                                {
+                                    "Tag": {
+                                        "id": "dummy",
+                                        "name": "Dummy"
+                                    }
+                                },
+                                {
+                                    "Tag": {
+                                        "id": "nodej",
+                                        "name": "node.js"
+                                    }
+                                },
+                                {
+                                    "Tag": {
+                                        "id": "fixture",
+                                        "name": "fixtures"
+                                    }
+                                }
+                            ],
+                            "upc": "000123456789",
+                            "variants": [
+                                {
+                                    "Variant": {
+                                        "color": "blue",
+                                        "enabled": "True",
+                                        "id": "540ebfde96a5c711f8c358b7",
+                                        "inventory": "1",
+                                        "msrp": "5.0",
+                                        "price": "4.0",
+                                        "shipping": "1.0",
+                                        "shipping_time": "5-10",
+                                        "size": "M",
+                                        "sku": "Wish-M-Blue"
+                                    }
+                                },
+                                {
+                                    "Variant": {
+                                        "color": "yellow",
+                                        "enabled": "True",
+                                        "id": "540ebfde96a5c711f8c358b9",
+                                        "inventory": "1",
+                                        "msrp": "5.0",
+                                        "price": "4.0",
+                                        "shipping": "1.0",
+                                        "shipping_time": "5-10",
+                                        "size": "M",
+                                        "sku": "Wish-M-Yellow"
+                                    }
+                                },
+                                {
+                                    "Variant": {
+                                        "color": "blue",
+                                        "enabled": "True",
+                                        "id": "540ebfde96a5c711f8c358ba",
+                                        "inventory": "1",
+                                        "msrp": "5.0",
+                                        "price": "4.0",
+                                        "shipping": "1.0",
+                                        "shipping_time": "5-10",
+                                        "size": "S",
+                                        "sku": "Wish-S-Blue"
+                                    }
+                                },
+                                {
+                                    "Variant": {
+                                        "color": "yellow",
+                                        "enabled": "True",
+                                        "id": "540ebfde96a5c711f8c358bb",
+                                        "inventory": "1",
+                                        "msrp": "5.0",
+                                        "price": "4.0",
+                                        "shipping": "1.0",
+                                        "shipping_time": "5-10",
+                                        "size": "S",
+                                        "sku": "Wish-S-Yellow"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "message": "",
+                "paging": {
+                    "next": "https://sandbox.merchant.wish.com/api/v1/product/multi-get?start=2&limit=2&key=test"
+                }
+            }
+        ],
+        "product/update": [
+            200,
+            {
+                "code": 0,
+                "data": null,
+                "message": ""
+            }
+        ],
+        "product/update# invalid id": [
+            400,
+            {
+                "code": 1000,
+                "data": 2014,
+                "message": "0 is an invalid id"
+            }
+        ],
+        "product/update# missing id and parent_sku": [
+            400,
+            {
+                "code": 1001,
+                "data": "id",
+                "message": "Must specify either 'id' or 'parent_sku'"
+            }
+        ],
+        "product/update# no exists id": [
+            400,
+            {
+                "code": 1004,
+                "data": 2018,
+                "message": "No 'Product' Found with id: '123456789012345678901234'"
+            }
+        ],
+        "product/update# no exists sku": [
+            400,
+            {
+                "code": 1004,
+                "data": 2018,
+                "message": "No 'Product' Found with id: 'None'"
+            }
+        ],
+        "product?id=0": [
+            400,
+            {
+                "code": 1004,
+                "data": 2018,
+                "message": "No 'Product' Found with id: '0'"
+            }
+        ],
+        "product?id=540e1415f570545a0d90f344": [
+            200,
+            {
+                "code": 0,
+                "data": {
+                    "Product": {
+                        "auto_tags": [],
+                        "brand": "1",
+                        "description": "Product description",
+                        "id": "540e1415f570545a0d90f344",
+                        "is_promoted": "False",
+                        "landing_page_url": "http://www.lalala.com/1",
+                        "name": "Test Product",
+                        "number_saves": "0",
+                        "number_sold": "0",
+                        "parent_sku": "parent_sku 1",
+                        "tags": [
+                            {
+                                "Tag": {
+                                    "id": "tag1",
+                                    "name": "tag1"
+                                }
+                            },
+                            {
+                                "Tag": {
+                                    "id": "tag2",
+                                    "name": "tag2"
+                                }
+                            },
+                            {
+                                "Tag": {
+                                    "id": "tags3",
+                                    "name": "tags3"
+                                }
+                            }
+                        ],
+                        "upc": "000000000001",
+                        "variants": [
+                            {
+                                "Variant": {
+                                    "color": "frenchlilac",
+                                    "enabled": "True",
+                                    "id": "540e1417f570545a0d90f346",
+                                    "inventory": "20",
+                                    "msrp": "6.0",
+                                    "price": "2.0",
+                                    "shipping": "2.0",
+                                    "shipping_time": "5-17",
+                                    "size": "1",
+                                    "sku": "sku 1"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "message": ""
+            }
+        ],
+        "variant/add": [
+            200,
+            {
+                "code": 0,
+                "data": {
+                    "Variant": {
+                        "enabled": "True",
+                        "id": "540ed24896a5c711f8c358bc",
+                        "inventory": "100",
+                        "msrp": "100.0",
+                        "price": "100.0",
+                        "shipping": "5.0",
+                        "shipping_time": "7-14",
+                        "size": "L",
+                        "sku": "Bottle-1-L"
+                    }
+                },
+                "message": ""
+            }
+        ],
+        "variant/add# missing size and color": [
+            400,
+            {
+                "code": 1000,
+                "data": 2219,
+                "message": "Ooops! You must specify either a size or a color."
+            }
+        ],
+        "variant/disable": [
+            200,
+            {
+                "code": 0,
+                "data": null,
+                "message": ""
+            }
+        ],
+        "variant/enable": [
+            200,
+            {
+                "code": 0,
+                "data": null,
+                "message": ""
+            }
+        ],
+        "variant/multi-get": [
+            200,
+            {
+                "code": 0,
+                "data": [
+                    {
+                        "Variant": {
+                            "enabled": "True",
+                            "id": "540ec40196a5c711f7c358b9",
+                            "inventory": "100",
+                            "msrp": "80.0",
+                            "price": "50.0",
+                            "shipping": "5.0",
+                            "shipping_time": "7-14",
+                            "sku": "Bottle-1"
+                        }
+                    },
+                    {
+                        "Variant": {
+                            "color": "blue",
+                            "enabled": "True",
+                            "id": "540ebfde96a5c711f8c358b7",
+                            "inventory": "1",
+                            "msrp": "5.0",
+                            "price": "4.0",
+                            "shipping": "1.0",
+                            "shipping_time": "5-10",
+                            "size": "M",
+                            "sku": "Wish-M-Blue"
+                        }
+                    },
+                    {
+                        "Variant": {
+                            "color": "yellow",
+                            "enabled": "True",
+                            "id": "540ebfde96a5c711f8c358b9",
+                            "inventory": "1",
+                            "msrp": "5.0",
+                            "price": "4.0",
+                            "shipping": "1.0",
+                            "shipping_time": "5-10",
+                            "size": "M",
+                            "sku": "Wish-M-Yellow"
+                        }
+                    },
+                    {
+                        "Variant": {
+                            "color": "blue",
+                            "enabled": "True",
+                            "id": "540ebfde96a5c711f8c358ba",
+                            "inventory": "1",
+                            "msrp": "5.0",
+                            "price": "4.0",
+                            "shipping": "1.0",
+                            "shipping_time": "5-10",
+                            "size": "S",
+                            "sku": "Wish-S-Blue"
+                        }
+                    },
+                    {
+                        "Variant": {
+                            "color": "yellow",
+                            "enabled": "True",
+                            "id": "540ebfde96a5c711f8c358bb",
+                            "inventory": "1",
+                            "msrp": "5.0",
+                            "price": "4.0",
+                            "shipping": "1.0",
+                            "shipping_time": "5-10",
+                            "size": "S",
+                            "sku": "Wish-S-Yellow"
+                        }
+                    }
+                ],
+                "message": "",
+                "paging": {
+                    "next": "https://sandbox.merchant.wish.com/api/v1/variant/multi-get?start=2&limit=2&key=test"
+                }
+            }
+        ],
+        "variant/update": [
+            200,
+            {
+                "code": 0,
+                "data": {},
+                "message": ""
+            }
+        ],
+        "variant?sku=Bottle-1-L": [
+            200,
+            {
+                "code": 0,
+                "data": {
+                    "Variant": {
+                        "enabled": "True",
+                        "id": "51e0a2c67d41a236cfffe3a2",
+                        "inventory": "100",
+                        "msrp": "20000.0",
+                        "price": "10000.0",
+                        "shipping": "101.0",
+                        "shipping_time": "7-14",
+                        "sku": "Bottle-1-L"
+                    }
+                },
+                "message": ""
+            }
+        ],
+        "variant?sku=zzz": [
+            400,
+            {
+                "code": 1004,
+                "data": {},
+                "message": "No 'Variant' Found with sku: 'zzz'"
+            }
+        ]
+    }
+}

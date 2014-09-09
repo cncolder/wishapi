@@ -148,11 +148,11 @@ module.exports = class Merchant
   handle: (promise) ->
     promise
       .catch ([ res, body ]) ->
-        debug 'HTTP Status', res.statusCode
+        debug 'HTTP Status', res?.statusCode
       
-        throw errors.http res.statusCode
+        throw errors.http res?.statusCode or 500
       .then ([ res, body ]) ->
-        debug body.code, body.message
+        debug body
       
         { code } = body
       
@@ -377,6 +377,14 @@ module.exports = class Merchant
   # `variants( [start], [limit], [callback] )`
   #
   # List all Product Variations
+  #
+  # Be careful: The limit is product count limit. Not variants limit.
+  #
+  # Arguments
+  #
+  # 1. start: *optional* An offset into the list of returned items. Use 0 to start at the beginning. The API will return the requested number of items starting at this offset. Default to 0 if not supplied
+  # 2. limit: A limit on the number of products that can be returned. Limit can range from 1 to 500 items and the default is 50
+  # 3. callback: err, variants
   # - - -
   variants: (start, limit, callback) ->
     @variantsJSON start, limit

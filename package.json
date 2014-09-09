@@ -49,7 +49,7 @@
         "url": "git://github.com/cncolder/wishapi.git"
     },
     "scripts": {
-        "coveralls": "mocha --reporter mocha-lcov-reporter | coveralls",
+        "coveralls": "mocha --require blanket --reporter mocha-lcov-reporter | coveralls",
         "prepublish": "gulp build",
         "test": "mocha"
     },
@@ -58,5 +58,5 @@
         "merchant",
         "api"
     ],
-    "version": "0.1.0"
+    "version": "0.1.1"
 }

@@ -62,17 +62,16 @@ About Merchant class you can read [an annotated source][merchant-doc]. It write 
 
 This api return some wish special error type. You can find them at [errors annotated source][errors-doc].
 
+[travis-url]: https://travis-ci.org/cncolder/wishapi
+[travis-image]: https://travis-ci.org/cncolder/wishapi.svg?branch=master
 
-[travis-url]: http://travis-ci.org/cncolder/wishapi
-[travis-image]: https://travis-ci.org/cncolder/wishapi.svg
-
-[coveralls-url]: https://coveralls.io/r/cncolder/wishapi
-[coveralls-image]: https://img.shields.io/coveralls/cncolder/wishapi.svg
+[coveralls-url]: https://coveralls.io/r/cncolder/wishapi?branch=master
+[coveralls-image]: https://coveralls.io/repos/cncolder/wishapi/badge.png?branch=master
 
 [npm-url]: https://npmjs.org/package/wishapi
-[npm-image]: http://img.shields.io/npm/v/wishapi.svg
+[npm-image]: https://img.shields.io/npm/v/wishapi.svg
 
 [bluebird]: https://github.com/petkaantonov/bluebird
 [official-doc]: https://merchant.wish.com/documentation/api
-[merchant-doc]: http://cncolder.github.io/wishapi/docs/merchant.html
-[errors-doc]: http://cncolder.github.io/wishapi/docs/errors.html
+[merchant-doc]: https://cncolder.github.io/wishapi/docs/merchant.html
+[errors-doc]: https://cncolder.github.io/wishapi/docs/errors.html
