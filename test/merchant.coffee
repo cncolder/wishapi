@@ -1,18 +1,32 @@
 { debug, assert, nock } = require './helpers'
+fixture = require './fixture'
 Merchant = require '../src/merchant'
 errors = require '../src/errors'
 
 
 describe 'Merchant', ->
+  { apikey } = fixture.sandbox
   wish = nock 'https://sandbox.merchant.wish.com'
   after ->
-    console.error "pending mocks:\n\t#{wish.pendingMocks().join('\n\t')}" if not wish.isDone()
+    if not wish.isDone()
+      pendingMocks = wish.pendingMocks().join '\n  '
+      console.error "pending mocks:\n  #{pendingMocks}"
   
   
-  it 'should run in sandbox when test', ->
-    merchant = new Merchant sandbox: true
-    assert.equal merchant.baseUrl, 'https://sandbox.merchant.wish.com/api/v1'
+  describe 'sandbox', ->
+    it 'should run in sandbox when test', ->
+      merchant = new Merchant sandbox: true
+      assert.equal merchant.baseUrl, 'https://sandbox.merchant.wish.com/api/v1'
+    
+    it 'should run with real api address when sandbox off', ->
+      merchant = new Merchant()
+      assert.equal merchant.sandbox, false
+      assert.equal merchant.baseUrl, 'https://merchant.wish.com/api/v1'
   
+  describe 'timeout', ->
+    it 'should has default timeout 20s', ->
+      merchant = new Merchant()
+      assert.equal merchant.timeout, 20 * 1000
   
   describe 'url', ->
     merchant = new Merchant sandbox: true
@@ -28,6 +42,13 @@ describe 'Merchant', ->
   
   describe 'format', ->
     merchant = new Merchant sandbox: true
+    
+    describe 'success', ->
+      it 'should adjust success to bool', ->
+        flat = merchant.format success: 'True'
+        assert.isTrue flat.success
+        flat = merchant.format success: 'False'
+        assert.isFalse flat.success
     
     describe 'tags', ->
       it 'should extract tags', ->
@@ -45,9 +66,9 @@ describe 'Merchant', ->
     
       it 'should adjust is_promoted to bool', ->
         flat = merchant.format Product: is_promoted: 'True'
-        assert.strictEqual flat.is_promoted, true
+        assert.isTrue flat.is_promoted
         flat = merchant.format Product: is_promoted: 'False'
-        assert.strictEqual flat.is_promoted, false
+        assert.isFalse flat.is_promoted
     
       it 'should cast number', ->
         flat = merchant.format Product:
@@ -67,9 +88,9 @@ describe 'Merchant', ->
     
       it 'should adjust enabled to bool', ->
         flat = merchant.format Variant: enabled: 'True'
-        assert.strictEqual flat.enabled, true
+        assert.isTrue flat.enabled
         flat = merchant.format Variant: enabled: 'False'
-        assert.strictEqual flat.enabled, false
+        assert.isFalse flat.enabled
     
       it 'should cast price', ->
         flat = merchant.format Variant:
@@ -144,6 +165,42 @@ describe 'Merchant', ->
         ]
   
   
+  describe 'handle', ->
+    describe 'server error', ->
+      before ->
+        wish
+          .get '/api/v1/auth_test?key=1'
+          .reply 200, nocode: 'wish not give us a code'
+          
+      it 'should reject ServerError', ->
+        merchant = new Merchant
+          sandbox: true
+          key: '1'
+        assert.isRejected merchant.authTest(), errors.ServerError
+    
+    describe 'timeout', ->
+      before ->
+        wish
+          .get '/api/v1/auth_test?key=4'
+          .delayConnection 1000
+          .reply null
+          
+      it 'should catch timeout', ->
+        merchant = new Merchant
+          sandbox: true
+          key: '4'
+          timeout: 1
+        assert.isRejected merchant.authTest(), 'ETIMEDOUT'
+  
+  
+  describe 'post', ->
+    describe 'missing key', ->
+      it 'should reject ParamMissingError', ->
+        merchant = new Merchant sandbox: true
+        promise = merchant.post '/'
+        assert.isRejected promise, errors.ParamMissingError
+  
+  
   describe 'authTest', ->
     describe 'without key', ->
       it 'should reject ParamMissingError', ->
@@ -152,10 +209,10 @@ describe 'Merchant', ->
     
     describe 'wrong key', ->
       before ->
+        [ status, body ] = fixture.sandbox['auth_test?key=0']
         wish
           .get '/api/v1/auth_test?key=0'
-          .reply 401,
-            {"message":"Unauthorized Request","code":4000,"data":{}}
+          .reply status, body
             
       it 'should reject AuthError', ->
         merchant = new Merchant
@@ -164,42 +221,34 @@ describe 'Merchant', ->
         assert.isRejected merchant.authTest(), errors.AuthError
     
     describe 'right key', ->
+      merchant = new Merchant
+        sandbox: true
+        key: 'test'
+        
       before ->
+        [ status, body ] = fixture.sandbox['auth_test']
         wish
           .get '/api/v1/auth_test?key=test'
-          .reply 200,
-            {"message":"","code":0,"data":{"success":true}}
+          .times 2
+          .reply status, body
       
       it 'should success', ->
-        merchant = new Merchant
-          sandbox: true
-          key: 'test'
         assert.becomes merchant.authTest(), success: true
-    
-    describe 'nodeify callback', ->
-      before ->
-        wish
-          .get '/api/v1/auth_test?key=test'
-          .reply 200,
-            {"message":"","code":0,"data":{"success":true}}
       
-      it 'should callback with err and result', (done) ->
-        merchant = new Merchant
-          sandbox: true
-          key: 'test'
+      it 'should call nodeify callback', (done) ->
         merchant.authTest (err, result) ->
+          assert.ifError err
           assert.equal result.success, true
           done()
-  
   
   describe 'product', ->
     describe 'get', ->
       describe 'with wrong id', ->
         before ->
+          [ status, body ] = fixture.sandbox['product?id=0']
           wish
             .get '/api/v1/product?id=0&key=test'
-            .reply 400,
-              {"message":"No 'Product' Found with id: '0'","code":1004,"data":2018}
+            .reply status, body
       
         it 'should reject NotFoundError', ->
           merchant = new Merchant
@@ -209,75 +258,35 @@ describe 'Merchant', ->
           assert.isRejected promise, errors.NotFoundError
           
       describe 'with right id', ->
+        merchant = new Merchant
+          sandbox: true
+          key: 'test'
+          
         before ->
+          [ status, body ] = fixture.sandbox['product?id=540e1415f570545a0d90f344']
           wish
-            .get '/api/v1/product?id=51e0a2c47d41a236cfffe3a0&key=test'
-            .reply 200, {
-              "message":"","code":0,
-              "data":{
-                "Product":{
-                  "is_promoted":"False",
-                  "description":"JIMMY CRACK CORN",
-                  "tags":[
-                    {"Tag":{"id":"jimmy","name":"jimmy"}},
-                    {"Tag":{"id":"gaming","name":"Gaming"}}
-                  ],
-                  "upc":"000000000000",
-                  "name":"TEST!!!",
-                  "auto_tags":[
-                    {"Tag":{"id":"test","name":"test"}}
-                  ],
-                  "number_saves":"12529",
-                  "variants":[{
-                    "Variant":{
-                      "sku":"Bottle-1-L",
-                      "msrp":"20000.0",
-                      "inventory":"100",
-                      "price":"10000.0",
-                      "enabled":"True",
-                      "id":"51e0a2c67d41a236cfffe3a2",
-                      "shipping":"101.0",
-                      "shipping_time":"7-14"
-                    }
-                  }],
-                  "parent_sku":"Bottle-1",
-                  "id":"51e0a2c47d41a236cfffe3a0",
-                  "number_sold":"14"
-                }
-              }
-            }
+            .get '/api/v1/product?id=540e1415f570545a0d90f344&key=test'
+            .times 2
+            .reply status, body
       
         it 'should get product', ->
-          merchant = new Merchant
-            sandbox: true
-            key: 'test'
-          promise = merchant.product '51e0a2c47d41a236cfffe3a0'
+          promise = merchant.product '540e1415f570545a0d90f344'
           assert.isFulfilled promise.then (product) ->
-            assert.equal product.name, 'TEST!!!'
-            assert.strictEqual product.number_saves, 12529
-            assert.strictEqual product.number_sold, 14
-            assert.strictEqual product.number_sold, 14
-            assert.equal product.tags[1].name, 'Gaming'
-            assert.equal product.auto_tags[0].id, 'test'
-            assert.strictEqual product.variants[0].enabled, true
-            assert.strictEqual product.variants[0].msrp, 20000
-            assert.strictEqual product.variants[0].inventory, 100
-            assert.strictEqual product.variants[0].price, 10000
-            assert.strictEqual product.variants[0].shipping, 101
+            assert.equal product.name, 'Test Product'
+            assert.equal product.tags[0].name, 'tag1'
+            assert.strictEqual product.variants[0].price, 2
+        
+        it 'should accept hash args', ->
+          promise = merchant.product id: '540e1415f570545a0d90f344'
+          assert.isFulfilled promise
             
     describe 'multi get', ->
       describe 'first two', ->
         before ->
+          [ status, body ] = fixture.sandbox['product/multi-get']
           wish
             .get '/api/v1/product/multi-get?start=0&limit=2&key=test'
-            .reply 200, {
-              "message":"","code":0,
-              "data":[
-                {"Product":{"parent_sku":"Bottle-1","id":"51e0a2c47d41a236cfffe3a0"}},
-                {"Product":{"id":"51e0a2c47d41a236cfffe3a4","parent_sku":"Bottle-2"}}
-              ],
-              "paging":{"next": "https:\/\/sandbox.merchant.wish.com\/api\/v1\/product\/multi-get?start=2&limit=2&key=test"}
-            }
+            .reply status, body
       
         it 'should get multi products', ->
           merchant = new Merchant
@@ -286,22 +295,50 @@ describe 'Merchant', ->
           promise = merchant.products 0, 2
           assert.isFulfilled promise.then (products) ->
             assert.lengthOf products, 2
+      
+      describe 'default args is 0, 50', ->
+        before ->
+          [ status, body ] = fixture.sandbox['product/multi-get']
+          wish
+            .get '/api/v1/product/multi-get?start=0&limit=50&key=test'
+            .reply status, body
+      
+        it 'should get 50 products', ->
+          merchant = new Merchant
+            sandbox: true
+            key: 'test'
+          promise = merchant.products()
+          assert.isFulfilled promise
             
     describe 'create', ->
-      describe 'invalid param', ->
+      describe 'missing main image', ->
         before ->
+          [ status, body ] = fixture.sandbox['product/add# missing main image']
           wish
             .filteringRequestBody /.*Sextoy.*/, 'Sextoy'
             .post '/api/v1/product/add', 'Sextoy'
-            .reply 400, {
-              "message":"Required column Main Image URL is missing.","code":1000,"data":2202
-            }
+            .reply status, body
 
         it 'should reject ParamInvalidError', ->
           merchant = new Merchant
             sandbox: true
             key: 'test'
           promise = merchant.createProduct name: 'Sextoy'
+          assert.isRejected promise, errors.ParamInvalidIdError
+      
+      describe 'cannot get image', ->
+        before ->
+          [ status, body ] = fixture.sandbox['product/add# cannot get image']
+          wish
+            .filteringRequestBody /.*example.*/, 'example'
+            .post '/api/v1/product/add', 'example'
+            .reply status, body
+
+        it 'should reject ParamInvalidError', ->
+          merchant = new Merchant
+            sandbox: true
+            key: 'test'
+          promise = merchant.createProduct main_image: 'http://www.example.com/1.jpg'
           assert.isRejected promise, errors.ParamInvalidIdError
         
       describe 'valid param', ->
@@ -317,22 +354,19 @@ describe 'Merchant', ->
           shipping: 5
           msrp: 80
           shipping_time: '7-14'
-          main_image: 'http://www.example.com/1.jpg'
+          main_image: 'https://www.google.com/intl/en_ALL/images/srpr/logo11w.png'
           parent_sku: 'Bottle-1'
           brand: 'Wish'
           landing_page_url: ''
           upc: ''
-          extra_images: 'http://www.example.com/2.jpg|http://www.example.com/3.jpg'
+          extra_images: ''
         
         before ->
+          [ status, body ] = fixture.sandbox['product/add']
           wish
             .filteringRequestBody /.*Bottle.*/, 'Bottle'
             .post '/api/v1/product/add', 'Bottle'
-            .reply 200, {
-              'code': 0,
-              'data': {'Product': form }
-              'message': ''
-            }
+            .reply status, body
           
         it 'should return new product', ->
           merchant = new Merchant
@@ -343,14 +377,13 @@ describe 'Merchant', ->
             assert.equal product.name, 'Bottle'
     
     describe 'update', ->
-      describe 'missing id and sku', ->
+      describe 'missing id and parent_sku', ->
         before ->
+          [ status, body ] = fixture.sandbox['product/update# missing id and parent_sku']
           wish
             .filteringRequestBody /.*key.*/, 'key'
             .post '/api/v1/product/update', 'key'
-            .reply 400, {
-              "message":"Must specify either 'id' or 'parent_sku'","code":1001,"data":"id"
-            }
+            .reply status, body
 
         it 'should reject ParamInvalidError', ->
           merchant = new Merchant
@@ -361,12 +394,11 @@ describe 'Merchant', ->
       
       describe 'invalid id', ->
         before ->
+          [ status, body ] = fixture.sandbox['product/update# invalid id']
           wish
             .filteringRequestBody /.*id=0.*/, 'id0'
             .post '/api/v1/product/update', 'id0'
-            .reply 400, {
-              "message":"0 is an invalid id","code":1000,"data":2014
-            }
+            .reply status, body
 
         it 'should reject ParamInvalidError', ->
           merchant = new Merchant
@@ -377,13 +409,11 @@ describe 'Merchant', ->
       
       describe 'no exists id', ->
         before ->
+          [ status, body ] = fixture.sandbox['product/update# no exists id']
           wish
             .filteringRequestBody /.*id=123456789012345678901234.*/, 'id1234'
             .post '/api/v1/product/update', 'id1234'
-            .reply 400, {
-              "message":"No 'Product' Found with id: '123456789012345678901234'",
-              "code":1004,"data":2018
-            }
+            .reply status, body
 
         it 'should reject NotFoundError', ->
           merchant = new Merchant
@@ -394,12 +424,11 @@ describe 'Merchant', ->
       
       describe 'no exists sku', ->
         before ->
+          [ status, body ] = fixture.sandbox['product/update# no exists sku']
           wish
             .filteringRequestBody /.*parent_sku=0.*/, 'sku0'
             .post '/api/v1/product/update', 'sku0'
-            .reply 400, {
-              "message":"No 'Product' Found with id: 'None'","code":1004,"data":2018
-            }
+            .reply status, body
 
         it 'should reject NotFoundError', ->
           merchant = new Merchant
@@ -410,12 +439,11 @@ describe 'Merchant', ->
       
       describe 'valid param', ->
         before ->
+          [ status, body ] = fixture.sandbox['product/update']
           wish
             .filteringRequestBody /.*Bottle.*/, 'Bottle'
             .post '/api/v1/product/update', 'Bottle'
-            .reply 200, {
-              "message":"","code":0,"data":null
-            }
+            .reply status, body
           
         it 'should return new product', ->
           merchant = new Merchant
@@ -428,12 +456,11 @@ describe 'Merchant', ->
     
     describe 'enable', ->
       before ->
+        [ status, body ] = fixture.sandbox['product/enable']
         wish
           .filteringRequestBody /.*Bottle.*/, 'Bottle'
           .post '/api/v1/product/enable', 'Bottle'
-          .reply 200, {
-            "message":"","code":0,"data":{}
-          }
+          .reply status, body
 
       it 'should enabled', ->
         merchant = new Merchant
@@ -444,12 +471,11 @@ describe 'Merchant', ->
     
     describe 'disable', ->
       before ->
+        [ status, body ] = fixture.sandbox['product/disable']
         wish
           .filteringRequestBody /.*Bottle.*/, 'Bottle'
           .post '/api/v1/product/disable', 'Bottle'
-          .reply 200, {
-            "message":"","code":0,"data":{}
-          }
+          .reply status, body
 
       it 'should disabled', ->
         merchant = new Merchant
@@ -462,10 +488,10 @@ describe 'Merchant', ->
     describe 'get', ->
       describe 'wrong sku', ->
         before ->
+          [ status, body ] = fixture.sandbox['variant?sku=zzz']
           wish
             .get '/api/v1/variant?sku=zzz&key=test'
-            .reply 400,
-              {"message":"No 'Variant' Found with sku: 'zzz'","code":1004,"data":{}}
+            .reply status, body
       
         it 'should reject NotFoundError', ->
           merchant = new Merchant
@@ -476,23 +502,10 @@ describe 'Merchant', ->
       
       describe 'large bottle', ->
         before ->
+          [ status, body ] = fixture.sandbox['variant?sku=Bottle-1-L']
           wish
             .get '/api/v1/variant?sku=Bottle-1-L&key=test'
-            .reply 200,{
-              "message":"","code":0,
-              "data":{
-                "Variant":{
-                  "sku":"Bottle-1-L",
-                  "msrp":"20000.0",
-                  "inventory":"100",
-                  "price":"10000.0",
-                  "enabled":"True",
-                  "id":"51e0a2c67d41a236cfffe3a2",
-                  "shipping":"101.0",
-                  "shipping_time":"7-14"
-                }
-              }
-            }
+            .reply status, body
       
         it 'should get variant', ->
           merchant = new Merchant
@@ -503,46 +516,48 @@ describe 'Merchant', ->
             assert.strictEqual variant.shipping, 101
   
     describe 'multi get', ->
-      describe 'three', ->
+      describe 'two', ->
         before ->
+          [ status, body ] = fixture.sandbox['variant/multi-get']
           wish
-            .get '/api/v1/variant/multi-get?start=0&limit=3&key=test'
-            .reply 200, {
-              "message":"","code":0,
-              "data":[
-                {"Variant":{"sku":"Bottle-1-L"}},
-                {"Variant":{"sku":"Bottle-2-L"}},
-                {"Variant":{"sku":"Bottle-3-L"}}
-              ],
-              "paging":{
-                "next": "https:\/\/sandbox.merchant.wish.com\/api\/v1\/variant\/multi-get?start=3&limit=3&key=test"
-              }
-            }
+            .get '/api/v1/variant/multi-get?start=0&limit=2&key=test'
+            .reply status, body
       
         it 'should get multi variants', ->
           merchant = new Merchant
             sandbox: true
             key: 'test'
-          promise = merchant.variants 0, 3
-          assert.isFulfilled promise.then (variants) ->
-            assert.lengthOf variants, 3
+          promise = merchant.variants 0, 2
+          assert.isFulfilled promise
+      
+      describe 'default args is 0, 50', ->
+        before ->
+          [ status, body ] = fixture.sandbox['variant/multi-get']
+          wish
+            .get '/api/v1/variant/multi-get?start=0&limit=50&key=test'
+            .reply status, body
+      
+        it 'should get the variants of 50 products', ->
+          merchant = new Merchant
+            sandbox: true
+            key: 'test'
+          promise = merchant.variants()
+          assert.isFulfilled promise
     
     describe 'create', ->
       form =
         parent_sku: 'Bottle-1'
         sku: 'Bottle-1-L'
+        size: 'L'
         price: 100
-        main_image: 'http://www.example.com/1.jpg'
+        main_image: 'https://lh6.ggpht.com/CEMGXC5MmqbXaauaM_qq8-e7rjk9O2zcv3QAa9wWlxVKnQ_pF03_t5rp4wM2B-fTf_nep8oBj4E7JgUJwmHFh_G5MUDqHyz5yx6lEkO4=s660'
       
       before ->
+        [ status, body ] = fixture.sandbox['variant/add']
         wish
-          .filteringRequestBody /.*Bottle.*/, 'Bottle'
-          .post '/api/v1/variant/add', 'Bottle'
-          .reply 200, {
-            'code': 0,
-            'data': {'Variant': form }
-            'message': ''
-          }
+          .filteringRequestBody /.*Bottle-1-L.*/, 'Bottle1L'
+          .post '/api/v1/variant/add', 'Bottle1L'
+          .reply status, body
         
       it 'should return new variant', ->
         merchant = new Merchant
@@ -550,15 +565,29 @@ describe 'Merchant', ->
           key: 'test'
         promise = merchant.createVariant form
         assert.isFulfilled promise
-    
+      
+      describe 'missing size and color', ->
+        before ->
+          [ status, body ] = fixture.sandbox['variant/add# missing size and color']
+          wish
+            .filteringRequestBody /.*Bottle-2.*/, 'Bottle2'
+            .post '/api/v1/variant/add', 'Bottle2'
+            .reply status, body
+        
+        it 'should reject ParamInvalidIdError', ->
+          merchant = new Merchant
+            sandbox: true
+            key: 'test'
+          promise = merchant.createVariant sku: 'Bottle-2'
+          assert.isRejected promise, errors.ParamInvalidIdError
+      
     describe 'update', ->
       before ->
+        [ status, body ] = fixture.sandbox['variant/update']
         wish
           .filteringRequestBody /.*Bottle.*/, 'Bottle'
           .post '/api/v1/variant/update', 'Bottle'
-          .reply 200, {
-            "message":"","code":0,"data":{}
-          }
+          .reply status, body
         
       it 'should success', ->
         merchant = new Merchant
@@ -571,12 +600,11 @@ describe 'Merchant', ->
     
     describe 'enable', ->
       before ->
+        [ status, body ] = fixture.sandbox['variant/enable']
         wish
           .filteringRequestBody /.*Bottle.*/, 'Bottle'
           .post '/api/v1/variant/enable', 'Bottle'
-          .reply 200, {
-            "message":"","code":0,"data":{}
-          }
+          .reply status, body
 
       it 'should enabled', ->
         merchant = new Merchant
@@ -587,12 +615,11 @@ describe 'Merchant', ->
     
     describe 'disable', ->
       before ->
+        [ status, body ] = fixture.sandbox['variant/disable']
         wish
           .filteringRequestBody /.*Bottle.*/, 'Bottle'
           .post '/api/v1/variant/disable', 'Bottle'
-          .reply 200, {
-            "message":"","code":0,"data":{}
-          }
+          .reply status, body
 
       it 'should disabled', ->
         merchant = new Merchant
@@ -606,10 +633,10 @@ describe 'Merchant', ->
     describe 'get', ->
       describe 'invalid id', ->
         before ->
+          [ status, body ] = fixture.sandbox['order?id=0']
           wish
             .get '/api/v1/order?id=0&key=test'
-            .reply 400,
-              {"message":"0 is an invalid id","code":1000,"data":2014}
+            .reply status, body
       
         it 'should reject InvalidIdError', ->
           merchant = new Merchant
@@ -620,10 +647,10 @@ describe 'Merchant', ->
       
       describe 'wrong id', ->
         before ->
+          [ status, body ] = fixture.sandbox['order?id=123456789012345678901234']
           wish
             .get '/api/v1/order?id=123456789012345678901234&key=test'
-            .reply 400,
-              {"message":"No 'Order' Found with id: '123456789012345678901234'","code":1004,"data":2021}
+            .reply status, body
       
         it 'should reject NotFoundError', ->
           merchant = new Merchant
@@ -634,40 +661,10 @@ describe 'Merchant', ->
     
       describe 'right id', ->
         before ->
+          [ status, body ] = fixture.sandbox['order?id=123456789009876543210164']
           wish
             .get '/api/v1/order?id=123456789009876543210164&key=test'
-            .reply 200, {
-              "message":"","code":0,
-              "data":{
-                "Order":{
-                  "ShippingDetail": {
-                    "city": "North Bay",
-                    "country": "US",
-                    "name": "Mick Berry",
-                    "phone_number": "+1 555-181-7247",
-                    "state": "NC",
-                    "street_address1": "2126 PO Box 5 Rt 49",
-                    "zipcode": "13123"},
-                  "last_updated": "2013-12-06T20:20:20",
-                  "order_time": "2013-12-06T20:20:20",
-                  "order_id": "123456789009876543210164",
-                  "order_total": "20",
-                  "product_id": "1113fad43deaf71536cb2c74",
-                  "quantity": "2",
-                  "price":"8",
-                  "cost":"6.8",
-                  "shipping":"2.35",
-                  "shipping_cost":"2",
-                  "product_name":"Dandelion Necklace",
-                  "product_image_url": "http://d1zog42tnv16ho.cloudfront.net/4fea11fac43bf532f4001419-normal.jpg",
-                  "days_to_fulfill": "2",
-                  "sku": "Dandelion Necklace",
-                  "state": "APPROVED",
-                  "transaction_id": "11114026a99e980d4e500269",
-                  "variant_id": "1111fad63deaf71536cb2c76"
-                }
-              }
-            }
+            .reply status, body
       
         it 'should get order', ->
           merchant = new Merchant
@@ -679,64 +676,75 @@ describe 'Merchant', ->
     
     describe 'multi get', ->
       before ->
+        [ status, body ] = fixture.sandbox['order/multi-get']
         wish
-          .get '/api/v1/order/multi-get?start=0&limit=50&since=&key=test'
-          .reply 200, {
-            "message":"","code":0,
-            "data":[{
-              "Order":{
-                "ShippingDetail": {"country": "US","zipcode": "13123"},
-                "variant_id": "1111fad63deaf71536cb2c76"
-              }
-            }]
-          }
+          .get '/api/v1/order/multi-get?start=0&limit=2&since=&key=test'
+          .reply status, body
     
       it 'should get orders', ->
         merchant = new Merchant
           sandbox: true
           key: 'test'
-        promise = merchant.orders()
-        assert.isFulfilled promise
+        promise = merchant.orders 0, 2
+        assert.isFulfilled promise.then (orders) ->
+          assert.lengthOf orders, 2
+      
+      describe 'default args is 0, 50', ->
+        before ->
+          [ status, body ] = fixture.sandbox['order/multi-get']
+          wish
+            .get '/api/v1/order/multi-get?start=0&limit=50&since=&key=test'
+            .reply status, body
+      
+        it 'should get 50 orders', ->
+          merchant = new Merchant
+            sandbox: true
+            key: 'test'
+          promise = merchant.orders()
+          assert.isFulfilled promise
     
     describe 'unfullfiled', ->
       before ->
+        [ status, body ] = fixture.sandbox['order/get-fulfill']
         wish
-          .get '/api/v1/order/get-fulfill?start=0&limit=50&since=&key=test'
-          .reply 200, {
-            "message":"","code":0,
-            "data":[{
-              "Order":{
-                "ShippingDetail": {"country": "US","zipcode": "13123"},
-                "variant_id": "1111fad63deaf71536cb2c76",
-                'days_to_fulfill': '2'
-              }
-            }]
-          }
+          .get '/api/v1/order/get-fulfill?start=0&limit=2&since=&key=test'
+          .reply status, body
     
       it 'should get orders', ->
         merchant = new Merchant
           sandbox: true
           key: 'test'
-        promise = merchant.unfullfiledOrders()
+        promise = merchant.unfullfiledOrders 0, 2
         assert.isFulfilled promise
+      
+      describe 'default args is 0, 50', ->
+        before ->
+          [ status, body ] = fixture.sandbox['order/get-fulfill']
+          wish
+            .get '/api/v1/order/get-fulfill?start=0&limit=50&since=&key=test'
+            .reply status, body
+      
+        it 'should get 50 unfulfill orders', ->
+          merchant = new Merchant
+            sandbox: true
+            key: 'test'
+          promise = merchant.unfullfiledOrders()
+          assert.isFulfilled promise
     
     describe 'fulfill', ->
       before ->
+        [ status, body ] = fixture.sandbox['order/fulfill-one']
         wish
           .filteringRequestBody /.*USPS.*/, 'USPS'
           .post '/api/v1/order/fulfill-one', 'USPS'
-          .reply 200, {
-            'code': 0,
-            'data': {'success': 'True'},
-            'message': 'Your order is been processed right now!'
-          }
+          .reply status, body
     
       it 'should success', ->
         merchant = new Merchant
           sandbox: true
           key: 'test'
         promise = merchant.fulfillOrder
-          id: '1'
+          id: '540e1418f570545a1090f34a'
           tracking_provider: 'USPS'
           tracking_number: '12345678'
         assert.isFulfilled promise.then (res) ->
@@ -744,40 +752,48 @@ describe 'Merchant', ->
       
     describe 'refund', ->
       before ->
+        [ status, body ] = fixture.sandbox['order/refund']
         wish
           .filteringRequestBody /.*reason_code=0.*/, 'reason0'
           .post '/api/v1/order/refund', 'reason0'
-          .reply 200, {
-            'code': 0,
-            'data': {'success': 'True'},
-            'message': ''
-          }
+          .times 2
+          .reply status, body
     
       it 'should success', ->
         merchant = new Merchant
           sandbox: true
           key: 'test'
         promise = merchant.refundOrder
-          id: '1'
+          id: '540e1418f570545a1090f34c'
+          reason_code: '0'
+        assert.isFulfilled promise.then (res) ->
+          assert.equal res.success, true
+      
+      it 'should cancel either', ->
+        merchant = new Merchant
+          sandbox: true
+          key: 'test'
+        promise = merchant.cancelOrder
+          id: '540e1418f570545a1090f34c'
           reason_code: '0'
         assert.isFulfilled promise.then (res) ->
           assert.equal res.success, true
 
     describe 'modify', ->
       before ->
+        [ status, body ] = fixture.sandbox['order/modify-tracking']
         wish
-          .filteringRequestBody /.*tracking_number=987654321.*/, 'tracking9'
+          .filteringRequestBody /.*tracking_number=9876543210.*/, 'tracking9'
           .post '/api/v1/order/modify-tracking', 'tracking9'
-          .reply 200, {
-            "message":"","code":0,"data":{'success': 'True'}
-          }
+          .reply status, body
         
       it 'should success', ->
         merchant = new Merchant
           sandbox: true
           key: 'test'
         promise = merchant.modifyOrder
-          id: '1'
-          tracking_number: '987654321'
+          id: '540e1418f570545a1090f34a'
+          tracking_provider: 'USPS'
+          tracking_number: '9876543210'
         assert.isFulfilled promise
         

@@ -1,4 +1,4 @@
-wishapi [![Build Status](https://secure.travis-ci.org/cncolder/wishapi.png)](http://travis-ci.org/cncolder/wishapi)
+wishapi [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![NPM version][npm-image]][npm-url]
 =======
 
 Wish.com api for Node.js.
@@ -37,7 +37,7 @@ merchant.product('a product id')
 Don't favor promise?
 --------------------
 
-Thanks [bluebird](https://github.com/petkaantonov/bluebird). We provide callback too.
+Thanks [Bluebird][bluebird]. We provide callback too.
 
 ```javascript
 merchant.fulfillOrder({
@@ -56,8 +56,35 @@ merchant.fulfillOrder({
 Document
 --------
 
-First, you need read [official api document](https://merchant.wish.com/documentation/api). To understand every model property.
+First, you need read [Official api document][official-doc]. To understand every model property.
 
-About Merchant class you can read [an annotated source](http://cncolder.github.io/wishapi/docs/merchant.html). It write by coffee script. But you don't need install it. The code you installed by npm is compiled vanilla javascript.
+About Merchant class you can read [an annotated source][merchant-doc]. It write by coffee script. But you don't need install it. The code you installed by npm is compiled vanilla javascript.
 
-This api return some wish special error type. You can find them at [errors annotated source](http://cncolder.github.io/wishapi/docs/errors.html).
+This api return some wish special error type. You can find them at [errors annotated source][errors-doc].
+
+Issue
+-----
+
+Our code have pass [100% test converage][coverage] currently.
+
+If you find out any issues. Please [let me know][issues].
+
+If you have any good idea. Send me a pull request.
+
+
+[travis-url]: https://travis-ci.org/cncolder/wishapi
+[travis-image]: https://travis-ci.org/cncolder/wishapi.svg?branch=master
+
+[coveralls-url]: https://coveralls.io/r/cncolder/wishapi?branch=master
+[coveralls-image]: https://coveralls.io/repos/cncolder/wishapi/badge.png?branch=master
+
+[npm-url]: https://npmjs.org/package/wishapi
+[npm-image]: https://img.shields.io/npm/v/wishapi.svg
+
+[bluebird]: https://github.com/petkaantonov/bluebird
+[official-doc]: https://merchant.wish.com/documentation/api
+[merchant-doc]: https://cncolder.github.io/wishapi/docs/merchant.html
+[errors-doc]: https://cncolder.github.io/wishapi/docs/errors.html
+[coverage]: https://cncolder.github.io/wishapi/docs/coverage.html
+
+[issues]: https://github.com/cncolder/wishapi/issues

@@ -29,4 +29,4 @@ gulp.task 'mocha', ->
     # .pipe cache 'mocha'
     .pipe mocha
       reporter: 'min'
-      # timeout:  '20s'
+      timeout:  '30s'

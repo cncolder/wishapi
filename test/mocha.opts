@@ -1,2 +1,2 @@
 --compilers coffee:coffee-script/register
---check-leaks
+--timeout 30000
