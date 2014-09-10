@@ -1,5 +1,8 @@
-debug = require 'debug'
+try
+  debug = require 'debug'
+catch
 
 
 module.exports = (name) ->
-  d = debug "wishapi:#{name}"
+  debug ?= -> ->
+  debug "wishapi:#{name}"

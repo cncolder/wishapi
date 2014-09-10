@@ -10,7 +10,6 @@
     },
     "dependencies": {
         "bluebird": "^2.3.2",
-        "debug": "^1.0.4",
         "errors": "^0.2.0",
         "request": "^2.42.0"
     },
@@ -20,6 +19,7 @@
         "chai-as-promised": "^4.1.1",
         "coffee-script": "^1.8.0",
         "coveralls": "^2.11.1",
+        "debug": "^2.0.0",
         "del": "^0.1.2",
         "docco": "^0.6.3",
         "gulp": "^3.8.7",
@@ -49,7 +49,9 @@
         "url": "git://github.com/cncolder/wishapi.git"
     },
     "scripts": {
-        "coveralls": "mocha --require blanket --reporter mocha-lcov-reporter | coveralls",
+        "cov": "mkdir -p docs; mocha -r blanket -R html-cov | sed s:$PWD:.:g > docs/coverage.html",
+        "coveralls": "mocha -r blanket -R mocha-lcov-reporter | coveralls",
+        "doc": "docco src/*.coffee",
         "prepublish": "gulp build",
         "test": "mocha"
     },
@@ -58,5 +60,5 @@
         "merchant",
         "api"
     ],
-    "version": "0.1.2"
+    "version": "0.1.4"
 }
