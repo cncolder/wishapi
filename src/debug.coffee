@@ -4,7 +4,5 @@ catch
 
 
 module.exports = (name) ->
-  if debug
-    debug "wishapi:#{name}"
-  else
-    ->
+  debug ?= -> ->
+  debug "wishapi:#{name}"

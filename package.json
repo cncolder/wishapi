@@ -49,7 +49,9 @@
         "url": "git://github.com/cncolder/wishapi.git"
     },
     "scripts": {
-        "coveralls": "mocha --require blanket --reporter mocha-lcov-reporter | coveralls",
+        "cov": "mkdir -p docs; mocha -r blanket -R html-cov | sed s:$PWD:.:g > docs/coverage.html",
+        "coveralls": "mocha -r blanket -R mocha-lcov-reporter | coveralls",
+        "doc": "docco src/*.coffee",
         "prepublish": "gulp build",
         "test": "mocha"
     },
