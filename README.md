@@ -1,7 +1,7 @@
-wishapi [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![NPM version][npm-image]][npm-url]
-=======
+[![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url] [![NPM version][npm-img]][npm-url] [![Greenkeeper badge][greenkeeper-img]][greenkeeper-url]
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/cncolder/wishapi.svg)](https://greenkeeper.io/)
+wishapi
+=======
 
 Wish.com api for Node.js.
 
@@ -75,13 +75,16 @@ If you have any good idea. Send me a pull request.
 
 
 [travis-url]: https://travis-ci.org/cncolder/wishapi
-[travis-image]: https://travis-ci.org/cncolder/wishapi.svg?branch=master
+[travis-img]: https://travis-ci.org/cncolder/wishapi.svg?branch=master
 
 [coveralls-url]: https://coveralls.io/r/cncolder/wishapi?branch=master
-[coveralls-image]: https://coveralls.io/repos/cncolder/wishapi/badge.png?branch=master
+[coveralls-img]: https://coveralls.io/repos/cncolder/wishapi/badge.png?branch=master
 
 [npm-url]: https://npmjs.org/package/wishapi
-[npm-image]: https://img.shields.io/npm/v/wishapi.svg
+[npm-img]: https://img.shields.io/npm/v/wishapi.svg
+
+[greenkeeper-url]: https://greenkeeper.io/
+[greenkeeper-img]: https://badges.greenkeeper.io/cncolder/wishapi.svg
 
 [bluebird]: https://github.com/petkaantonov/bluebird
 [official-doc]: https://merchant.wish.com/documentation/api
