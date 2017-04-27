@@ -1,6 +1,8 @@
 wishapi [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![NPM version][npm-image]][npm-url]
 =======
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/cncolder/wishapi.svg)](https://greenkeeper.io/)
+
 Wish.com api for Node.js.
 
 Install
