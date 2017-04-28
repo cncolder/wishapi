@@ -19,7 +19,7 @@
         "chai-as-promised": "^6.0.0",
         "coffee-script": "^1.8.0",
         "coveralls": "^2.11.1",
-        "debug": "^2.0.0",
+        "debug": "^2.6.6",
         "del": "^2.2.2",
         "docco": "^0.7.0",
         "gulp": "^3.8.7",
