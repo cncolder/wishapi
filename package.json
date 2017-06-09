@@ -20,7 +20,7 @@
         "coffee-script": "^1.8.0",
         "coveralls": "^2.11.1",
         "debug": "^2.0.0",
-        "del": "^2.2.2",
+        "del": "^3.0.0",
         "docco": "^0.7.0",
         "gulp": "^3.8.7",
         "gulp-cached": "^1.0.1",
