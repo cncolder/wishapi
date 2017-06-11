@@ -16,7 +16,7 @@
     "description": "Wish.com api",
     "devDependencies": {
         "blanket": "^1.1.6",
-        "chai-as-promised": "^6.0.0",
+        "chai-as-promised": "^7.0.0",
         "coffee-script": "^1.8.0",
         "coveralls": "^2.11.1",
         "debug": "^2.0.0",
