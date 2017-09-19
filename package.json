@@ -11,7 +11,7 @@
     "dependencies": {
         "bluebird": "^3.5.0",
         "errors": "^0.3.0",
-        "request": "^2.42.0"
+        "request": "2.81.0"
     },
     "description": "Wish.com api",
     "devDependencies": {
