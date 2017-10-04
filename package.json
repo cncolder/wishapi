@@ -9,7 +9,7 @@
         }
     },
     "dependencies": {
-        "bluebird": "^3.5.0",
+        "bluebird": "^3.5.1",
         "errors": "^0.3.0",
         "request": "^2.42.0"
     },
